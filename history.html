@@ -1,0 +1,1888 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saved History Logs - Stone Calculator</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  </head>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #7ed9e0 0%, #528e7a 100%);
+
+      --card-bg: rgb(146, 221, 214);
+      --card-hover: rgb(214, 245, 241);
+
+      --primary: black;
+      --secondary: #528e7a;
+      --accent: #4aa8b5;
+
+      --text-dark: #23423a;
+      --text-muted: #5f7f78;
+
+      --border: rgba(82, 142, 122, 0.15);
+
+      --shadow: 0 8px 24px rgba(82, 142, 122, 0.12);
+
+      --shadow-hover: 0 12px 32px rgba(82, 142, 122, 0.22);
+    }
+
+    /* BODY */
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", sans-serif;
+      background: #84ccc6;
+      color: var(--text-dark);
+    }
+
+    /* MAIN WRAPPER */
+    .calculator-wrapper {
+      max-width: 950px;
+      width: 100%;
+      margin: 30px auto;
+      padding: 30px;
+      border-radius: 24px;
+      background: #c7e9e6;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(6, 184, 238, 0.932);
+      /* border: 1px solid black; */
+
+      /* box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08); */
+    }
+
+    /* PAGE TITLE */
+    h1 {
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 34px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: black;
+      margin-bottom: 25px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    /* #historyContainer {
+      width: auto;
+    } */
+
+    /* HISTORY CARD */
+    .history-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      color: black;
+      transition: all 0.3s ease;
+    }
+    .stone-summary {
+      /* border: 1px solid black; */
+      display: flex;
+      gap: 12px;
+      margin: 30px 0px 15px;
+      flex-wrap: wrap;
+    }
+
+    .stone-summary div {
+      flex: 1;
+      /* width: 100px; */
+      background: rgb(93, 212, 157);
+      border-radius: 14px;
+      padding: 14px 18px;
+      text-align: center;
+      font-size: 23px;
+      font-weight: 800;
+      color: #191d22;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      transition: transform 0.2s ease;
+    }
+
+    .stone-summary div:hover {
+      transform: translateY(-2px);
+    }
+
+    .stone-summary span {
+      display: block;
+      margin-top: 6px;
+      font-size: 30px;
+      font-weight: 700;
+      color: black;
+    }
+
+    .history-card:hover {
+      transform: translateY(-2px);
+
+      background: #c7e9e6;
+
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* HEADER */
+    .history-card-header {
+      display: flex;
+      justify-content: space-between;
+      /* align-items: center; */
+
+      margin-bottom: 18px;
+
+      border-bottom: 1px solid rgba(82, 142, 122, 0.15);
+      /* border: 1px solid black; */
+
+      font-size: 18px;
+      font-weight: 700;
+      padding-bottom: 10px;
+    }
+
+    .history-card-header-div {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+    .history-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .history-card-date {
+      color: var(--text-muted);
+      font-size: 16px;
+      color: black;
+      font-weight: bold;
+    }
+
+    /* GRID */
+    .history-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 230px);
+      gap: 15px;
+
+      margin-bottom: 20px;
+    }
+
+    .history-card-metric {
+      background: rgba(171, 233, 219, 0.5);
+
+      border-radius: 12px;
+
+      padding: 10px;
+      color: black;
+
+      text-align: center;
+    }
+
+    .history-card-metric span:first-child {
+      display: block;
+
+      font-size: 20px;
+      font-weight: 700;
+      color: black;
+
+      margin-bottom: 8px;
+    }
+
+    .history-card-metric span:last-child {
+      font-size: 1.2rem;
+
+      font-weight: 700;
+
+      color: var(--primary);
+    }
+
+    /* BUTTONS */
+    .history-card-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .btn-secondary,
+    .btn-success,
+    .btn-danger {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-secondary {
+      background: #4aa8b5;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #3b97a4;
+    }
+
+    .btn-success {
+      background: #528e7a;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #447665;
+    }
+
+    .btn-danger {
+      background: #dc5d5d;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c74848;
+    }
+
+    /* DELETE ALL BUTTON */
+    #clearHistoryBtn {
+      background: #dc5d5d;
+      color: white;
+    }
+
+    /* EMPTY MESSAGE */
+    .no-history {
+      background: rgba(255, 255, 255, 0.35);
+      padding: 25px;
+      border-radius: 16px;
+      font-size: 18px;
+      text-align: center;
+      color: black;
+      font-weight: 500;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      margin: 15px 0;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      text-align: center;
+      align-content: center;
+      padding: 8px 9px;
+      font-size: 20px;
+      border-radius: 10px;
+      background: #bbe0db59;
+      color: var(--primary);
+      font-weight: 600;
+      transition: 0.3s;
+      background: #78dbdb;
+    }
+
+    .nav-links a:hover {
+      background: blue;
+      color: white;
+    }
+    #showDetails {
+      cursor: pointer;
+      color: black;
+      font-weight: 800;
+      margin-left: 120px;
+      text-align: center;
+      width: 90px;
+      height: 30px;
+      border: 1px solid black;
+      background: #0ef0d2a6;
+      border-radius: 4px;
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .nav-links a {
+        font-size: 17px;
+      }
+      .stone-summary {
+        gap: 8px;
+      }
+      #showDetails {
+        width: 60px;
+        height: auto;
+        font-size: 9px;
+        padding: 2px 0px 3px;
+        margin-left: 50px;
+      }
+
+      .stone-summary div {
+        width: 100px;
+        padding: 12px;
+        font-size: 13px;
+        /* border: 1px solid black; */
+      }
+
+      .stone-summary span {
+        /* border: 1px solid black; */
+        font-size: 19px;
+      }
+      #clearHistoryBtn {
+        font-size: 10px;
+      }
+
+      .history-card {
+        max-height: auto;
+        border: 1px solid black;
+        padding: 10px;
+        width: auto;
+      }
+      .history-card-title {
+        font-size: 8.5px;
+      }
+      .history-card-header {
+        font-size: 8px;
+        font-weight: 800;
+        /* text-align: center; */
+        word-break: keep-all;
+        /* border: 1px solid black; */
+      }
+
+      .history-card-header-div {
+        gap: 5px;
+      }
+      .history-card-grid {
+        margin-bottom: 10px;
+        margin-top: -15px;
+        /* border: 1px solid black; */
+        display: flex;
+        justify-content: space-around;
+      }
+
+      .history-card-metric {
+        /* border: 1px solid black; */
+        width: auto;
+        height: auto;
+        line-height: 1;
+        padding: 6px 9px;
+        font-size: 7px;
+        white-space: normal;
+        word-break: break-word;
+      }
+      .history-card-metric span:first-child {
+        font-size: 13px;
+        color: black;
+
+        /* margin-bottom: 8px; */
+        /* border: 1px solid black; */
+      }
+
+      .history-card-metric span:last-child {
+        /* border: 1px solid black; */
+        font-size: 16px;
+
+        font-weight: 800;
+
+        color: black;
+      }
+      .history-card-actions {
+        flex-wrap: wrap;
+        justify-content: end;
+      }
+      .btn-success {
+        padding: 3px 7px;
+        border-radius: 6px;
+      }
+      .btn-danger {
+        padding: 3px 7px;
+        border-radius: 6px;
+        margin-right: 10px;
+      }
+      .history-card-date {
+        color: black;
+        font-size: 8px;
+        color: black;
+        font-weight: 800;
+      }
+
+      .calculator-wrapper {
+        /* width: 900%;
+        max-width: 405px;
+        margin: 0 auto; */
+        background: #c7e9e6;
+      }
+      h1 {
+        font-size: 30px;
+      }
+      .subtitle {
+        font-size: 13px;
+      }
+    }
+
+    /*history css*/
+    /* ==========================================
+   FACTORY HISTORY
+   ========================================== */
+
+    .factory-history-section {
+      margin-bottom: 25px;
+    }
+
+    /* Factory header */
+
+    .factory-history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+
+      padding: 12px 16px;
+      margin-bottom: 10px;
+
+      border-radius: 12px;
+
+      background: #23ccbb;
+
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    /* Factory name */
+
+    .factory-history-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+
+      white-space: nowrap;
+    }
+
+    /* Summary */
+
+    .factory-load-summary {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    /* Each type box */
+
+    .load-type {
+      min-width: 90px;
+
+      padding: 6px 9px;
+
+      border-radius: 8px;
+
+      text-align: center;
+
+      background: rgba(126, 218, 211, 0.65);
+    }
+
+    /* Stone type */
+
+    .load-type > span {
+      display: block;
+
+      font-size: 15px;
+      font-weight: 800;
+
+      margin-bottom: 4px;
+
+      color: #0f172a;
+    }
+
+    /* Load / Chadaralu row */
+
+    .load-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      gap: 5px;
+
+      line-height: 1.4;
+    }
+
+    /* Labels */
+
+    .load-type small {
+      font-size: 11px;
+      color: black;
+      font-weight: 900;
+    }
+
+    /* Numbers */
+
+    .load-type strong {
+      font-size: 15px;
+      font-weight: 800;
+
+      color: #166534;
+    }
+
+    /* Total box */
+
+    .total-load {
+      background: #0f172a;
+    }
+
+    .total-load > span,
+    .total-load small,
+    .total-load strong {
+      color: white;
+    }
+
+    /* Reports */
+
+    .factory-reports {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ==========================================
+   OVERALL TOTAL
+   ========================================== */
+
+    .overall-chadaralu-total {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      gap: 15px;
+
+      margin-top: 25px;
+
+      padding: 16px 20px;
+
+      border-radius: 12px;
+
+      background: #0f172a;
+
+      color: white;
+    }
+
+    .overall-chadaralu-total div {
+      text-align: center;
+    }
+
+    .overall-chadaralu-total span {
+      display: block;
+
+      font-size: 14px;
+      font-weight: 800;
+
+      margin-bottom: 5px;
+    }
+
+    .overall-chadaralu-total small {
+      font-size: 10px;
+
+      margin-right: 4px;
+
+      color: #cbd5e1;
+    }
+
+    .overall-chadaralu-total strong {
+      font-size: 18px;
+
+      margin-right: 8px;
+
+      color: white;
+    }
+
+    /* ==========================================
+   MOBILE
+   ========================================== */
+
+    @media (max-width: 700px) {
+      .factory-history-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .factory-history-title {
+        text-align: center;
+      }
+
+      .factory-load-summary {
+        justify-content: center;
+      }
+
+      .load-type {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .overall-chadaralu-total {
+        flex-wrap: wrap;
+      }
+
+      .overall-chadaralu-total div {
+        min-width: 90px;
+      }
+    }
+  </style>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <div class="calculator-wrapper">
+      <!-- <button
+        class="theme-toggle-btn"
+        onclick="toggleTheme()"
+        title="Toggle Theme"
+      >
+        ☀️
+      </button>
+      <p id="date" class="date-header">Date: --/--/----</p> -->
+
+      <h1>Saved Reports History</h1>
+      <p class="subtitle">View and Manage Local Stone Load Entries</p>
+
+      <nav class="navbar">
+        <div class="nav-links">
+          <a href="index.html">Calculator</a>
+          <a href="load-details.html" class="active">Load Details</a>
+          <a href="history.html">History</a>
+        </div>
+      </nav>
+      <div class="stone-summary">
+        <div>
+          Kolathalu(కొలతలు) మొత్తం చదరపు అడుగులు
+          <span id="kolathaluSum">0</span>
+        </div>
+
+        <div>
+          Mandhalu(మందలు) మొత్తం చదరపు అడుగులు
+          <span id="mandhaluSum">0</span>
+        </div>
+      </div>
+
+      <div
+        style="display: flex; justify-content: flex-end; margin-bottom: 20px"
+      >
+        <button
+          id="clearHistoryBtn"
+          class="btn-danger"
+          style="display: none"
+          onclick="clearAllHistory()"
+        >
+          🗑️ Delete All History
+        </button>
+      </div>
+
+      <!-- History listing container -->
+      <div id="historyContainer">
+        <!-- Rendered dynamically -->
+        <div class="no-history">
+          No saved reports found. Run a calculation and export or save it to
+          store history locally.
+        </div>
+      </div>
+    </div>
+
+    <!-- Application script bundle -->
+    <!-- <script src="app.js"></script> -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        renderHistory();
+      });
+
+      // function renderHistory() {
+      //   const history = JSON.parse(localStorage.getItem("reportHistory")) || [];
+      //   const container = document.getElementById("historyContainer");
+      //   const clearBtn = document.getElementById("clearHistoryBtn");
+
+      //   if (history.length === 0) {
+      //     document.getElementById("kolathaluSum").textContent = 0;
+      //     document.getElementById("mandhaluSum").textContent = 0;
+
+      //     container.innerHTML = `<div class="no-history">No saved reports found. Run a calculation and export or save it to store history locally.</div>`;
+      //     clearBtn.style.display = "none";
+      //     return;
+      //   }
+
+      //   clearBtn.style.display = "inline-flex";
+      //   container.innerHTML = "";
+
+      //   let stoneTypeText = "";
+      //   let kolathaluSum = 0;
+      //   let mandhaluSum = 0;
+
+      //   history.forEach((report) => {
+      //     const date = new Date(report.date).toLocaleString("en-GB", {
+      //       day: "2-digit",
+      //       month: "2-digit",
+      //       year: "numeric",
+      //     });
+      //     const detailedDate = new Date(report.date).toLocaleString("en-GB", {
+      //       day: "2-digit",
+      //       month: "2-digit",
+      //       year: "numeric",
+      //       hour: "2-digit",
+      //       minute: "2-digit",
+      //       second: "2-digit",
+      //       hour12: true,
+      //     });
+      //     // console.log(report.loadDetails);
+      //     const vehicle = report.loadDetails?.vehicleNo || "N/A";
+      //     const stoneType = report.loadDetails?.StoneType || "N/A";
+      //     const total = Number(report.totalSqFt || 0);
+      //     console.log(stoneType);
+
+      //     if (stoneType === "Kolathalu(కొలతలు)") {
+      //       stoneTypeText = "కొలతలు";
+      //       kolathaluSum += total;
+      //     } else if (stoneType === "Mandhalu(మందలు)") {
+      //       stoneTypeText = "మందలు";
+      //       mandhaluSum += total;
+      //     }
+      //     const driver = report.loadDetails?.driverName || "N/A";
+      //     const miningOwner = report.loadDetails?.miningOwner || "N/A";
+      //     const miningOwnerPhone =
+      //       report.loadDetails?.miningOwnerPhone || "N/A";
+      //     const factoryOwner = report.loadDetails?.factoryOwner || "N/A";
+      //     const factoryOwnerPhone = report.loadDetails?.factoryPhone || "N/A";
+
+      //     const card = document.createElement("div");
+      //     card.className = "history-card";
+      //     card.innerHTML = `
+      //           <div class="history-card-header">
+      //             <div class="history-card-header-div" >
+      //               <span id="vehicleNo" class="history-card-title">Vehicle No: ${vehicle}</span>
+
+      //               <span id="driverName">Stone Type: ${stoneTypeText}</span>
+      //               <span id="miningOwnerName">Mining Owner: ${miningOwner}</span>
+
+      //               <span id="factoryOwnername">FAC.Owner: ${factoryOwner}</span>
+
+      //     <span  class="history-card-date">Date: ${date}</span>
+      //     <span id="showDetails"
+      //    onclick="showDetails('${report.id}')" >
+      //     Info >>
+      //     </span>
+      //     </div>
+      //     </div>
+      //     <div   class="history-card-grid">
+      //       <div class="history-card-metric">
+      //         <span>Total Stones</span>
+      //         <span>${report.totalStones}</span>
+      //         </div>
+      //         <div class="history-card-metric">
+      //           <span>Total Area</span>
+      //           <span>${report.totalSqFt} SqFt</span>
+      //           </div>
+      //           <div class="history-card-metric">
+      //             <span>Squares/చదరాలు</span>
+      //             <span>${report.totalChadaralu}</span>
+      //             </div>
+      //             </div>
+      //             <div class="history-card-actions">
+      //               <button class="btn-success" onclick="downloadSpecificReport('${report.id}')">💾 Image</button>
+      //               <button class="btn-danger" onclick="deleteHistoryItem('${report.id}')">✕</button>
+      //               </div>
+      //               `;
+      //     container.appendChild(card);
+      //   });
+      //   console.log("mandhaluSum" + mandhaluSum);
+      //   console.log("kolathaluSum" + kolathaluSum);
+      //   document.getElementById("kolathaluSum").textContent = kolathaluSum;
+
+      //   document.getElementById("mandhaluSum").textContent = mandhaluSum;
+      // }
+
+      function renderHistory() {
+        const history = JSON.parse(localStorage.getItem("reportHistory")) || [];
+
+        const container = document.getElementById("historyContainer");
+
+        const clearBtn = document.getElementById("clearHistoryBtn");
+
+        // =====================================================
+        // NO HISTORY
+        // =====================================================
+
+        if (history.length === 0) {
+          document.getElementById("kolathaluSum").textContent = "0.00";
+          document.getElementById("mandhaluSum").textContent = "0.00";
+
+          container.innerHTML = `
+      <div class="no-history">
+        No saved reports found.
+        Run a calculation and export or save it to store history locally.
+      </div>
+    `;
+
+          clearBtn.style.display = "none";
+          return;
+        }
+
+        clearBtn.style.display = "inline-flex";
+        container.innerHTML = "";
+
+        // =====================================================
+        // OVERALL TOTALS
+        // =====================================================
+
+        let overallKolathaluLoads = 0;
+        let overallMandhaluLoads = 0;
+
+        let overallKolathaluChadaralu = 0;
+        let overallMandhaluChadaralu = 0;
+
+        let overallKolathaluSqFt = 0;
+        let overallMandhaluSqFt = 0;
+
+        // =====================================================
+        // GROUP REPORTS BY FACTORY
+        // =====================================================
+
+        const factoryGroups = {};
+
+        history.forEach((report) => {
+          const factoryName =
+            report.loadDetails?.factoryOwner?.trim() || "No Factory";
+
+          // Create factory group if it doesn't exist
+          if (!factoryGroups[factoryName]) {
+            factoryGroups[factoryName] = {
+              reports: [],
+              kolathaluLoads: 0,
+              mandhaluLoads: 0,
+              kolathaluChadaralu: 0,
+              mandhaluChadaralu: 0,
+            };
+          }
+
+          // Add report to factory
+          factoryGroups[factoryName].reports.push(report);
+
+          const stoneType = report.loadDetails?.StoneType || "";
+
+          const chadaralu = Number(report.totalChadaralu || 0);
+
+          const sqFt = Number(report.totalSqFt || 0);
+
+          // ===================================================
+          // KOLATHALU
+          // ===================================================
+
+          if (stoneType === "Kolathalu(కొలతలు)") {
+            factoryGroups[factoryName].kolathaluLoads++;
+
+            factoryGroups[factoryName].kolathaluChadaralu += chadaralu;
+
+            overallKolathaluLoads++;
+            overallKolathaluChadaralu += chadaralu;
+            overallKolathaluSqFt += sqFt;
+          }
+
+          // ===================================================
+          // MANDHALU
+          // ===================================================
+          else if (stoneType === "Mandhalu(మందలు)") {
+            factoryGroups[factoryName].mandhaluLoads++;
+
+            factoryGroups[factoryName].mandhaluChadaralu += chadaralu;
+
+            overallMandhaluLoads++;
+            overallMandhaluChadaralu += chadaralu;
+            overallMandhaluSqFt += sqFt;
+          }
+        });
+
+        // =====================================================
+        // DISPLAY EACH FACTORY
+        // =====================================================
+
+        Object.entries(factoryGroups).forEach(([factoryName, group]) => {
+          // Factory total loads
+          const totalLoads = group.kolathaluLoads + group.mandhaluLoads;
+
+          // Factory total chadaralu
+          const totalChadaralu =
+            group.kolathaluChadaralu + group.mandhaluChadaralu;
+
+          // =================================================
+          // FACTORY SECTION
+          // =================================================
+
+          const factorySection = document.createElement("div");
+
+          factorySection.className = "factory-history-section";
+
+          // =================================================
+          // FACTORY HEADER
+          // =================================================
+
+          factorySection.innerHTML = `
+        <div class="factory-history-header">
+
+          <!-- FACTORY NAME -->
+          <div class="factory-history-title">
+            🏭 ${factoryName}
+          </div>
+
+          <!-- FACTORY SUMMARY -->
+          <div class="factory-load-summary">
+
+            <!-- KOLATHALU -->
+            <div class="load-type">
+
+              <span>కొలతలు</span>
+
+              <div class="load-row">
+                <small>Loads</small>
+                <strong>
+                  ${group.kolathaluLoads}
+                </strong>
+              </div>
+
+              <div class="load-row">
+                <small>చదరాలు</small>
+                <strong>
+                  ${group.kolathaluChadaralu.toFixed(2)}
+                </strong>
+              </div>
+
+            </div>
+
+
+            <!-- MANDHALU -->
+            <div class="load-type">
+
+              <span>మందలు</span>
+
+              <div class="load-row">
+                <small>Loads</small>
+                <strong>
+                  ${group.mandhaluLoads}
+                </strong>
+              </div>
+
+              <div class="load-row">
+                <small>చదరాలు</small>
+                <strong>
+                  ${group.mandhaluChadaralu.toFixed(2)}
+                </strong>
+              </div>
+
+            </div>
+
+
+            <!-- TOTAL -->
+            <div class="load-type total-load">
+
+              <span>మొత్తం</span>
+
+              <div class="load-row">
+                <small>Loads</small>
+                <strong>
+                  ${totalLoads}
+                </strong>
+              </div>
+
+              <div class="load-row">
+                <small>చదరాలు</small>
+                <strong>
+                  ${totalChadaralu.toFixed(2)}
+                </strong>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+          // =================================================
+          // REPORTS CONTAINER
+          // =================================================
+
+          const reportsContainer = document.createElement("div");
+
+          reportsContainer.className = "factory-reports";
+
+          // =================================================
+          // DISPLAY REPORTS
+          // =================================================
+
+          group.reports.forEach((report) => {
+            const date = new Date(report.date).toLocaleString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            });
+
+            const vehicle = report.loadDetails?.vehicleNo || "N/A";
+
+            const stoneType = report.loadDetails?.StoneType || "N/A";
+
+            // Display Telugu stone type
+            let stoneTypeText = stoneType;
+
+            if (stoneType === "Kolathalu(కొలతలు)") {
+              stoneTypeText = "కొలతలు";
+            } else if (stoneType === "Mandhalu(మందలు)") {
+              stoneTypeText = "మందలు";
+            }
+
+            const driver = report.loadDetails?.driverName || "N/A";
+
+            const miningOwner = report.loadDetails?.miningOwner || "N/A";
+
+            // =================================================
+            // HISTORY CARD
+            // =================================================
+
+            const card = document.createElement("div");
+
+            card.className = "history-card";
+
+            card.innerHTML = `
+          <div class="history-card-header">
+
+            <div class="history-card-header-div">
+
+              <span class="history-card-title">
+                Vehicle No: ${vehicle}
+              </span>
+
+              <span>
+                Stone Type: ${stoneTypeText}
+              </span>
+
+              <span>
+                Driver: ${driver}
+              </span>
+
+              <span>
+                Mining Owner: ${miningOwner}
+              </span>
+
+              <span>
+                FAC.Owner: ${factoryName}
+              </span>
+
+              <span class="history-card-date">
+                Date: ${date}
+              </span>
+
+              <span
+                class="show-details"
+                onclick="showDetails('${report.id}')"
+              >
+                Info >>
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="history-card-grid">
+
+            <div class="history-card-metric">
+
+              <span>Total Stones</span>
+
+              <span>
+                ${report.totalStones || 0}
+              </span>
+
+            </div>
+
+
+            <div class="history-card-metric">
+
+              <span>Total Area</span>
+
+              <span>
+                ${Number(report.totalSqFt || 0).toFixed(2)}
+                SqFt
+              </span>
+
+            </div>
+
+
+            <div class="history-card-metric">
+
+              <span>Squares/చదరాలు</span>
+
+              <span>
+                ${Number(report.totalChadaralu || 0).toFixed(2)}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="history-card-actions">
+
+            <button
+              class="btn-success"
+              onclick="downloadSpecificReport('${report.id}')"
+            >
+              💾 Image
+            </button>
+
+            <button
+              class="btn-danger"
+              onclick="deleteHistoryItem('${report.id}')"
+            >
+              ✕
+            </button>
+
+          </div>
+        `;
+
+            reportsContainer.appendChild(card);
+          });
+
+          // Add reports below factory header
+          factorySection.appendChild(reportsContainer);
+
+          // Add factory section to main container
+          container.appendChild(factorySection);
+        });
+
+        // =====================================================
+        // OVERALL TOTALS
+        // =====================================================
+
+        const overallLoads = overallKolathaluLoads + overallMandhaluLoads;
+
+        const overallChadaralu =
+          overallKolathaluChadaralu + overallMandhaluChadaralu;
+
+        const overallElement = document.createElement("div");
+
+        overallElement.className = "overall-chadaralu-total";
+
+        overallElement.innerHTML = `
+
+    <div>
+      <span>కొలతలు</span>
+
+      <small>Loads</small>
+
+      <strong>
+        ${overallKolathaluLoads}
+      </strong>
+
+      <small>చదరాలు</small>
+
+      <strong>
+        ${overallKolathaluChadaralu.toFixed(2)}
+      </strong>
+    </div>
+
+
+    <div>
+      <span>మందలు</span>
+
+      <small>Loads</small>
+
+      <strong>
+        ${overallMandhaluLoads}
+      </strong>
+
+      <small>చదరాలు</small>
+
+      <strong>
+        ${overallMandhaluChadaralu.toFixed(2)}
+      </strong>
+    </div>
+
+
+    <div>
+      <span>మొత్తం</span>
+
+      <small>Loads</small>
+
+      <strong>
+        ${overallLoads}
+      </strong>
+
+      <small>చదరాలు</small>
+
+      <strong>
+        ${overallChadaralu.toFixed(2)}
+      </strong>
+    </div>
+
+  `;
+
+        container.appendChild(overallElement);
+
+        // =====================================================
+        // EXISTING SQFT TOTALS
+        // =====================================================
+
+        document.getElementById("kolathaluSum").textContent =
+          overallKolathaluSqFt.toFixed(2);
+
+        document.getElementById("mandhaluSum").textContent =
+          overallMandhaluSqFt.toFixed(2);
+      }
+
+      //------------rentor history----------------------------------
+      /**
+       * Shows the load details.
+       * Can be called with the report ID, the full report object, or individual fields.
+       */
+
+      function showDetails(id) {
+        const history = JSON.parse(localStorage.getItem("reportHistory")) || [];
+        const report = history.find((r) => r.id === id);
+
+        if (!report) {
+          Swal.fire({
+            title: "Report Not Found",
+            text: "Could not load the calculation details for this report.",
+            icon: "error",
+            background: "#84ccc6",
+            color: "black",
+          });
+          return;
+        }
+
+        showReportPreview(report);
+      }
+
+      /**
+       * Renders the high-fidelity report preview inside SweetAlert2
+       */
+      function showReportPreview(report) {
+        // Safe date formatting
+        let reportDate = "--";
+        if (report.date) {
+          try {
+            reportDate = new Date(report.date).toLocaleString("en-IN");
+          } catch (e) {
+            reportDate = report.date;
+          }
+        }
+
+        // 1. Build calculation rows HTML
+        let rowsHtml = "";
+        if (report.rows && report.rows.length > 0) {
+          rowsHtml = report.rows
+            .map((row) => {
+              const n1 = row.n1 || 0;
+              const n2 = row.n2 || 0;
+              const res = Math.floor(n1 * n2);
+              const n3 = row.n3 || 0;
+              const final = Math.floor(res * n3);
+
+              return `
+        <div style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 16px;
+        ">
+            <span style="color: black; font-weight: bold;">
+<strong>${String(n1).padStart(2, "0")}</strong> × <strong>${String(n2).padStart(2, "0")}</strong> = <span style="color:#999;">${String(res).padStart(2, "0")}</span> × <strong style="padding:0px 10px 0px 0px">${String(n3).padStart(2, "0")}(Qty)</strong>  
+            </span>
+            <span style="color: green; font-weight: bold;">
+                =     ${final} SqFt
+            </span>
+        </div>
+      `;
+            })
+            .join("");
+        }
+
+        // 2. Build logistics/truck load HTML
+        let loadDetailsHtml = "";
+        if (report.loadDetails) {
+          const details = report.loadDetails;
+          loadDetailsHtml = `
+      <div style="
+          background: rgba(255, 255, 255, 0.35);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          font-size: 15px;
+          color: black;
+          margin-bottom: 20px;
+          padding: 16px 20px;
+          border-radius: 18px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      ">
+          <h3 style="
+              margin: 0 0 15px;
+              color: #0f172a;
+              font-size: 20px;
+              font-weight: 800;
+              text-align: center;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+              padding-bottom: 8px;
+          ">
+              Truck Load Information
+          </h3>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.06); padding: 4px 0;">
+                  <strong>Date Of Loading Vehicle</strong>
+                  <span>${details.DateOfLoading || "--"}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.06); padding: 4px 0;">
+                  <strong>Vehicle Number</strong>
+                  <span style="font-weight: bold; color: darkblue;">${details.vehicleNo || "--"}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.06); padding: 4px 0;">
+                  <strong>Driver Name</strong>
+                  <span>${details.driverName || "--"}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.06); padding: 4px 0;">
+                  <strong>Mining Owner</strong>
+                  <span>${details.miningOwner || "--"}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.06); padding: 4px 0;">
+                  <strong>Mining Owner Phone</strong>
+                  <span>${details.miningOwnerPhone || "--"}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                  <strong>Factory Owner</strong>
+                  <span>${details.factoryOwner || "--"}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                  <strong>Factory Owner Phone</strong>
+                  <span>${details.factoryOwnerPhone || "--"}</span>
+              </div>
+          </div>
+      </div>
+    `;
+        }
+
+        // 3. Assemble Complete Preview Structure
+        const modalHtml = `
+    <div style="
+        text-align: left;
+        font-family: 'Outfit', sans-serif;
+        padding: 5px;
+        color: #1f2937;
+    ">
+        <!-- Header -->
+        <div style="
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            
+        ">
+           <center> <h3 style="margin: 0; font-size: 1.5rem; color: #0f172a; font-weight: 800;text-decoration: underline;">
+                Stone Area Report
+            </h3></center>
+            <span style="display: flex; justify-content: end">
+        <span
+          style="
+            font-size: 0.85rem;
+            color: #334155;
+            font-weight: 600;
+            // background: rgba(255, 255, 255, 0.4);
+            padding: 4px 8px;
+            border-radius: 20px;
+
+            width: auto;
+          "
+        >
+          ${reportDate}
+        </span>
+      </span>
+        </div>
+
+        <!-- Load Details -->
+        ${loadDetailsHtml}
+
+        <!-- Calculations Heading -->
+        <div style="
+            text-align: center;
+            font-weight: bold;
+            color: black;
+            font-size: 14px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            margin-bottom: 12px;
+        ">
+            Len x Width =(l x b) x No. of stones = Total Square Feet
+        </div>
+
+        <!-- Calculations Scrollable List -->
+        <div style="
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            padding: 8px 16px;
+            max-height: auto;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        ">
+            ${rowsHtml || '<div style="text-align:center;color:#4b5563;padding:10px;">No rows recorded.</div>'}
+        </div>
+
+        <!-- Totals panel -->
+        <div style="
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            border-top: 2px solid rgba(255, 255, 255, 0.15);
+            padding-top: 16px;
+        ">
+            <div style="
+                background: rgb(200, 237, 233);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                padding: 10px;
+                text-align: center;
+            ">
+                <div style="font-size: 13px; color: black; font-weight: bold; text-transform: uppercase; margin-bottom: 4px;">Total Stones</div>
+                <div style="font-size: 1.3rem; font-weight: 800; color: darkblue;">${report.totalStones}</div>
+            </div>
+            <div style="
+                background: rgb(200, 237, 233);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                padding: 10px;
+                text-align: center;
+            ">
+                <div style="font-size: 13px; color: black; font-weight: bold; text-transform: uppercase; margin-bottom: 4px;">Total Area</div>
+                <div style="font-size: 1.3rem; font-weight: 800; color: brown;">${report.totalSqFt}</div>
+            </div>
+            <div style="
+                background: rgb(200, 237, 233);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                padding: 10px;
+                text-align: center;
+            ">
+                <div style="font-size: 12px; color: black; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; line-height: 1.1;">మొత్తం చదరాలు</div>
+                <div style="font-size: 1.3rem; font-weight: 800; color: green;">${report.totalChadaralu}</div>
+            </div>
+        </div>
+    </div>
+  `;
+
+        // 4. Trigger SweetAlert2 Premium Popup
+        Swal.fire({
+          title: "", // Blank title because header is built inside html structure
+          html: modalHtml,
+          background: "rgb(200, 237, 233)",
+          color: "#1f2937",
+          width: "580px",
+          showDenyButton: true,
+          confirmButtonText:
+            '<i class="fa-solid fa-download"></i> Download JPG',
+          denyButtonText: "Close",
+          buttonsStyling: true,
+          confirmButtonColor: "#0f172a", // Premium slate dark button
+          denyButtonColor: "#475569", // Premium slate gray button
+          customClass: {
+            popup: "custom-swal-popup",
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            downloadSpecificReport(report.id);
+          }
+        });
+      }
+
+      function deleteHistoryItem(id) {
+        Swal.fire({
+          title: "Delete Report?",
+          text: "Are you sure you want to delete this report from history?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#6c757d",
+          confirmButtonText: "🗑️ Delete",
+          cancelButtonText: "Cancel",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            let history =
+              JSON.parse(localStorage.getItem("reportHistory")) || [];
+
+            history = history.filter((r) => r.id !== id);
+
+            localStorage.setItem("reportHistory", JSON.stringify(history));
+
+            renderHistory();
+
+            Swal.fire({
+              icon: "success",
+              title: "Deleted!",
+              text: "Report removed from history.",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          }
+        });
+      }
+
+      function clearAllHistory() {
+        Swal.fire({
+          title: "Delete All Reports?",
+          text: "This action is irreversible. All saved reports will be permanently deleted.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#6c757d",
+          confirmButtonText: "🗑️ Delete All",
+          cancelButtonText: "Cancel",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            localStorage.removeItem("reportHistory");
+            renderHistory();
+
+            Swal.fire({
+              icon: "success",
+              title: "History Cleared",
+              text: "All saved reports have been deleted.",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          }
+        });
+      }
+
+      function downloadSpecificReport(id) {
+        const history = JSON.parse(localStorage.getItem("reportHistory")) || [];
+        const report = history.find((r) => r.id === id);
+        if (!report) return;
+
+        // Build report template dynamically
+        const reportWrapper = document.createElement("div");
+        reportWrapper.style.position = "absolute";
+        reportWrapper.style.left = "-9999px";
+        reportWrapper.style.width = "720px";
+        reportWrapper.style.background = "rgb(200, 237, 233)";
+        reportWrapper.style.color = "#1f2937";
+        reportWrapper.style.padding = "30px";
+        reportWrapper.style.fontFamily = "'Outfit', sans-serif";
+        reportWrapper.style.borderRadius = "20px";
+        reportWrapper.style.boxShadow = "0 15px 40px rgba(0,0,0,0.15)";
+
+        const reportDate = new Date(report.date).toLocaleString("en-IN");
+
+        const headerHtml = `
+      <div style="
+          background: rgba(255,255,255,0.25);
+          backdrop-filter: blur(10px);
+          padding: 20px;
+          border-radius: 16px;
+          margin-bottom: 20px;
+          border: 1px solid rgba(255,255,255,0.3);
+      ">
+          <div style="
+              font-size: 0.95rem;
+              color: #334155;
+              text-align: right;
+              font-weight: 600;
+          ">
+              Date: ${reportDate}
+          </div>
+
+          <h2 style="
+              font-size: 2rem;
+              margin: 8px 0 0;
+              color: #0f172a;
+              font-weight: 800;
+              text-align:center;
+          ">
+              Stone Area Report
+          </h2>
+      </div>
+      `;
+        reportWrapper.innerHTML += headerHtml;
+
+        // Add load details if exists
+        if (report.loadDetails) {
+          const loadDetails = report.loadDetails;
+          const infoHtml = `
+      <div
+          style="
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            font-size: 20px;
+            color: black;
+            font-family: sans-serif;
+            /* width: 100%; */
+            margin-bottom: 20px;
+            padding: 24px;
+            line-height: 0.2;
+            border-radius: 18px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+          "
+        >
+          <h3
+            style="
+              margin: 0 0 40px;
+              color: #0f172a;
+              font-size: 36px;
+              font-weight: 800;
+              text-align: center;
+            "
+          >
+            Truck Load Information
+          </h3>
+
+          <p
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px 0;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            "
+          >
+            <strong>Date Of Loading Vehicle</strong>
+            <span>${loadDetails.DateOfLoading || "--"}</span>
+          </p>
+
+          <p
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px 0;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            "
+          >
+            <strong>Vehicle Number</strong>
+            <span>${loadDetails.vehicleNo || "--"}</span>
+          </p>
+
+          <p
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px 0;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            "
+          >
+            <strong>Driver Name</strong>
+            <span>${loadDetails.driverName || "--"}</span>
+          </p>
+
+          <p
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px 0;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            "
+          >
+            <strong>Mining Owner</strong>
+            <span>${loadDetails.miningOwner || "--"}</span>
+          </p>
+
+          <p
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px 0;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            "
+          >
+            <strong>Mining Owner Phone</strong>
+            <span>${loadDetails.miningOwnerPhone || "--"}</span>
+          </p>
+
+          <p style="display: flex; justify-content: space-between; padding: 10px 0">
+            <strong>Factory Owner</strong>
+            <span>${loadDetails.factoryOwner || "--"}</span>
+          </p>
+          <p style="display: flex; justify-content: space-between; padding: 10px 0">
+            <strong>Factory Owner</strong>
+            <span>${loadDetails.factoryOwnerPhone || "--"}</span>
+          </p>
+        </div>
+      `;
+          reportWrapper.innerHTML += infoHtml;
+        }
+
+        const itemListHeadingDiv = `
+             <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            font-size: 20px;
+            font-weight: bolder;
+            font-family: sans-serif;
+            border-bottom: 1px solid rgba(226, 223, 223, 0.05);
+            color: black;
+            text-decoration: underline;
+          "
+        >
+          <span style="font-family: sans-serif; font-weight: bolder"
+            >Len x Width =(l x b) x No. of stones = Total Square Feet</span
+          >
+        </div>
+              `;
+
+        reportWrapper.innerHTML += itemListHeadingDiv;
+
+        // Calculation list
+        if (report.rows && report.rows.length > 0) {
+          const listWrapper = document.createElement("div");
+          listWrapper.style.marginBottom = "25px";
+          listWrapper.style.background = "rgba(255,255,255,0.02)";
+          listWrapper.style.border = "1px solid rgba(255,255,255,0.08)";
+          listWrapper.style.borderRadius = "12px";
+          listWrapper.style.padding = "15px";
+
+          console.log(report.rows);
+          // let rowCounter = 1;
+          report.rows.forEach((row) => {
+            const n1 = row.n1 || 0;
+            const n2 = row.n2 || 0;
+            const res = Math.floor(n1 * n2);
+            const n3 = row.n3 || 0;
+            const final = Math.floor(res * n3);
+
+            const itemHtml = `
+                    <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            font-size: 20px;
+            font-family: sans-serif;
+            border-bottom: 1px solid rgba(226, 223, 223, 0.05);
+          "
+        >
+          <span style="color: black; font-weight: bolder"
+            ><strong>${n1} × ${n2} = ${res} x ${n3}(Qty) =</strong
+            ><span style="color: green; font-weight: bolder"
+              > ${final} SqFt</span
+            ></span
+          >
+        </div>
+                  `;
+            listWrapper.innerHTML += itemHtml;
+            // rowCounter++;
+          });
+          reportWrapper.appendChild(listWrapper);
+        }
+
+        // Totals
+        const footerHtml = `
+                 <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            border-top: 2px solid rgba(255, 255, 255, 0.15);
+            padding-top: 20px;
+          "
+        >
+          <div
+            style="
+              background: rgb(200, 237, 233);
+
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 8px;
+              padding: 12px;
+              text-align: center;
+            "
+          >
+            <div
+              style="
+                font-size: 18px;
+                color: black;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+                font-weight: bolder;
+              "
+            >
+              Total Stones
+            </div>
+            <div style="font-size: 1.8rem; font-weight: 800; color: darkblue">
+              ${report.totalStones}
+            </div>
+          </div>
+          <div
+            style="
+              background: rgb(200, 237, 233);
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 8px;
+              padding: 12px;
+              text-align: center;
+              font-weight: bolder;
+            "
+          >
+            <div
+              style="
+                font-size: 18px;
+                color: black;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+              "
+            >
+              Total Area (SqFt)
+            </div>
+            <div style="font-size: 1.8rem; font-weight: 800; color: brown">
+              ${report.totalSqFt}
+            </div>
+          </div>
+          <div
+            style="
+              background: rgb(200, 237, 233);
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 8px;
+              padding: 12px;
+              text-align: center;
+              font-weight: bolder;
+            "
+          >
+            <div
+              style="
+                text-transform: uppercase;
+                font-size: 18px;
+                color: black;
+                margin-bottom: 4px;
+              "
+            >
+              Total Squares/మొత్తం చదరాలు
+            </div>
+            <div style="font-size: 1.8rem; font-weight: 800; color: green">
+              ${report.totalChadaralu}
+            </div>
+          </div>
+        </div>
+
+              `;
+        reportWrapper.innerHTML += footerHtml;
+
+        document.body.appendChild(reportWrapper);
+
+        html2canvas(reportWrapper, {
+          scale: 1,
+          backgroundColor: "#0f172a",
+        })
+          .then((canvas) => {
+            const imgData = canvas.toDataURL("image/jpeg", 0.8);
+            const link = document.createElement("a");
+            link.href = imgData;
+            link.download = `StoneReport_${report.loadDetails?.vehicleNo || "NoVehicle"}_${report.id.slice(0, 8)}.jpg`;
+            link.click();
+            document.body.removeChild(reportWrapper);
+          })
+          .catch((err) => {
+            console.error("Canvas rendering failed", err);
+            document.body.removeChild(reportWrapper);
+            alert("Failed to render report image.");
+          });
+      }
+    </script>
+  </body>
+</html>

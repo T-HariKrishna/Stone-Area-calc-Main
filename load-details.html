@@ -1,0 +1,1643 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Load Details - Stone Calculator</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <style>
+      body {
+        background: #a7d4cb;
+      }
+      h1 {
+        font-size: 40px;
+      }
+      .load-details {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #c7e9e6;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-family: sans-serif;
+      }
+
+      .load-details h1 {
+        margin-bottom: 20px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        font-size: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        margin-bottom: 5px;
+        font-weight: 600;
+      }
+
+      .form-group input,
+      .select-with-add,
+      .form-group textarea {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 19px;
+      }
+
+      .full-width {
+        grid-column: 1 / -1;
+      }
+
+      .btn-container {
+        display: flex;
+        justify-content: center;
+      }
+
+      .save-btn {
+        display: block;
+        margin: 20px auto;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .save-btn:hover {
+        transform: translateY(-2px);
+        /* box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); */
+      }
+
+      .save-btn:active {
+        transform: translateY(0);
+      }
+
+      .alert-popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        min-width: 300px;
+        text-align: center;
+      }
+
+      .alert-popup p {
+        margin-bottom: 15px;
+        font-size: 19px;
+        color: black;
+        font-family: sans-serif;
+      }
+
+      .alert-popup button {
+        background: #4f8a7a;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .alert-popup button:hover {
+        opacity: 0.9;
+      }
+
+      .form-group {
+        position: relative;
+      }
+
+      .form-group input,
+      .select-with-add {
+        width: 100%;
+        padding-right: 35px;
+        box-sizing: border-box;
+      }
+
+      .clear-btn {
+        position: absolute;
+        right: 29px;
+        bottom: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #666;
+        user-select: none;
+        font-weight: 800;
+      }
+      .clear-btn-phone {
+        position: absolute;
+        right: 28px;
+        bottom: 48px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #666;
+        user-select: none;
+        font-weight: 800;
+      }
+      .clear-btn-stone-type {
+        position: absolute;
+        right: 39px;
+        bottom: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #666;
+        user-select: none;
+        font-weight: 800;
+      }
+      .clear-btn-stone-type:hover {
+        color: #000;
+        transform: translateX(-1px);
+      }
+
+      .clear-btn:hover {
+        color: #000;
+        transform: translateX(-1px);
+      }
+      .navbar {
+        margin: 15px 0;
+      }
+
+      .nav-links {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+
+        /* text-align: center; */
+        align-content: center;
+        padding: 8px 7px;
+        font-size: 19px;
+        margin: 10px 0px;
+        border-radius: 10px;
+        background: #78dbdb;
+        color: black;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+
+      .nav-links a:hover {
+        background: blue;
+        color: white;
+      }
+      #stoneType {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 19px;
+        font-family: sans-serif;
+      }
+      @media (min-width: 390px) and (max-width: 440px) {
+        .form-group input,
+        .form-group textarea {
+          font-size: 18px;
+        }
+        .form-grid {
+          font-size: 17px;
+        }
+        .nav-links a {
+          font-size: 17px;
+        }
+      }
+
+      /* =========================================
+   MODAL
+========================================= */
+
+      .person-modal {
+        display: none;
+
+        position: fixed;
+
+        inset: 0;
+
+        background: rgba(0, 0, 0, 0.55);
+
+        justify-content: center;
+
+        align-items: center;
+
+        z-index: 99999;
+
+        padding: 15px;
+      }
+
+      .person-modal-content {
+        width: 100%;
+
+        max-width: 420px;
+
+        background: #fff;
+
+        border-radius: 12px;
+
+        padding: 20px;
+
+        box-sizing: border-box;
+
+        max-height: 85vh;
+
+        overflow-y: auto;
+      }
+
+      .person-modal-header {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        margin-bottom: 15px;
+      }
+
+      .person-modal-header h3 {
+        margin: 0;
+      }
+
+      .modal-close-btn {
+        border: none;
+
+        background: transparent;
+
+        font-size: 20px;
+
+        cursor: pointer;
+      }
+
+      .modal-buttons {
+        display: flex;
+
+        justify-content: flex-end;
+
+        gap: 10px;
+
+        margin-top: 20px;
+      }
+
+      .modal-buttons button {
+        padding: 8px 15px;
+
+        border: none;
+
+        border-radius: 6px;
+
+        cursor: pointer;
+      }
+
+      .primary-modal-btn {
+        font-weight: 600;
+      }
+
+      .save-phone-btn {
+        margin-top: 8px;
+        padding: 7px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      /* =========================================
+   MANAGE NAME LIST
+========================================= */
+
+      .name-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 5px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .name-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .name-details strong {
+        font-size: 15px;
+      }
+
+      .name-details span {
+        font-size: 12px;
+        color: #777;
+      }
+
+      .name-actions {
+        display: flex;
+        gap: 5px;
+      }
+
+      .edit-name-btn,
+      .delete-name-btn {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 17px;
+      }
+
+      .no-names {
+        text-align: center;
+
+        padding: 20px;
+
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/imask"></script>
+    //select date from calender + type date
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <div id="customAlert" class="alert-popup">
+      <p id="alertMessage"></p>
+      <button onclick="closeAlert()">OK</button>
+    </div>
+
+    <div class="load-details">
+      <center><h1>Load Details</h1></center>
+
+      <nav class="navbar">
+        <div class="nav-links">
+          <a href="index.html">Calculator</a>
+          <a href="load-details.html" class="active">Load Details</a>
+          <a href="history.html">History</a>
+        </div>
+      </nav>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="loadDate">Load Date *</label>
+
+          <input
+            type="text"
+            id="loadDate"
+            placeholder="DD/MM/YYYY"
+            maxlength="10"
+            autocomplete="off"
+          />
+
+          <span class="clear-btn" onclick="clearField('loadDate')">✕</span>
+
+          <small id="dateError"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="Stones Type">Choose Stone Type:</label>
+
+          <select id="stoneType" name="Stone Type">
+            <option value="" selected disabled>Choose Stone Type</option>
+            <option value="Kolathalu(కొలతలు)">కొలతలు</option>
+            <option value="Mandhalu(మందలు)">మందలు</option>
+          </select>
+          <span class="clear-btn-stone-type" onclick="clearField('stoneType')"
+            >✕</span
+          >
+        </div>
+        <div class="form-group">
+          <label for="vehicleNo">Vehicle Number *</label>
+          <input
+            type="text"
+            id="vehicleNo"
+            placeholder="Ex: AP39AB1234"
+            oninput="this.value = this.value.toUpperCase()"
+            maxlength="10"
+            required
+          />
+
+          <span class="clear-btn" onclick="clearField('vehicleNo')">✕</span>
+        </div>
+        <!-- ================= DRIVER NAME ================= -->
+
+        <div class="form-group">
+          <label for="driverName">Driver Name *</label>
+
+          <select class="select-with-add" id="driverName" required>
+            <option value="" selected disabled>Select Driver</option>
+            <option value="__add__">＋ Add Driver</option>
+            <option value="__manage__">⚙ Manage Drivers</option>
+          </select>
+
+          <span class="clear-btn" onclick="clearField('driverName')">✕</span>
+        </div>
+
+        <!-- ================= MINING OWNER ================= -->
+
+        <div class="form-group">
+          <label for="miningOwner">Mining Owner Name *</label>
+
+          <select class="select-with-add" id="miningOwner" required>
+            <option value="">Select Mining Owner</option>
+            <option value="__add__">＋ Add Mining Owner</option>
+            <option value="__manage__">⚙ Manage Mining Owners</option>
+          </select>
+
+          <span class="clear-btn" onclick="clearField('miningOwner')">✕</span>
+        </div>
+
+        <!-- ================= MINING OWNER PHONE ================= -->
+
+        <div class="form-group">
+          <label for="miningOwnerPhone"> Mining Owner Phone No </label>
+
+          <input
+            type="tel"
+            id="miningOwnerPhone"
+            maxlength="10"
+            inputmode="numeric"
+            placeholder="Optional"
+          />
+
+          <span class="clear-btn-phone" onclick="clearField('miningOwnerPhone')"
+            >✕</span
+          >
+
+          <button type="button" id="saveMiningPhoneBtn" class="save-phone-btn">
+            Save / Update Phone
+          </button>
+        </div>
+
+        <!-- ================= FACTORY OWNER ================= -->
+
+        <div class="form-group">
+          <label for="factoryOwner">Factory Owner Name *</label>
+
+          <select class="select-with-add" id="factoryOwner" required>
+            <option value="">Select Factory Owner</option>
+            <option value="__add__">＋ Add Factory Owner</option>
+            <option value="__manage__">⚙ Manage Factory Owners</option>
+          </select>
+
+          <span class="clear-btn" onclick="clearField('factoryOwner')">✕</span>
+        </div>
+
+        <!-- ================= FACTORY OWNER PHONE ================= -->
+
+        <div class="form-group">
+          <label for="factoryPhone"> Factory Owner Phone </label>
+
+          <input
+            type="tel"
+            id="factoryPhone"
+            maxlength="10"
+            inputmode="numeric"
+            placeholder="Optional"
+          />
+
+          <span class="clear-btn-phone" onclick="clearField('factoryPhone')"
+            >✕</span
+          >
+
+          <button type="button" id="saveFactoryPhoneBtn" class="save-phone-btn">
+            Save / Update Phone
+          </button>
+        </div>
+
+        <!-- =====================================================
+     ADD / EDIT PERSON MODAL
+===================================================== -->
+
+        <div id="personModal" class="person-modal">
+          <div class="person-modal-content">
+            <div class="person-modal-header">
+              <h3 id="personModalTitle">Add Name</h3>
+
+              <button
+                type="button"
+                class="modal-close-btn"
+                onclick="closePersonModal()"
+              >
+                ✕
+              </button>
+            </div>
+
+            <!-- NAME -->
+
+            <div class="form-group">
+              <label for="personNameInput"> Name * </label>
+
+              <input
+                type="text"
+                id="personNameInput"
+                placeholder="Enter Name"
+                maxlength="100"
+                oninput="this.value = this.value.toUpperCase()"
+              />
+            </div>
+
+            <!-- PHONE -->
+
+            <div class="form-group" id="personPhoneGroup">
+              <label for="personPhoneInput"> Phone Number </label>
+
+              <input
+                type="tel"
+                id="personPhoneInput"
+                maxlength="10"
+                inputmode="numeric"
+                placeholder="Optional"
+              />
+
+              <small> You can add the phone number later. </small>
+            </div>
+
+            <div class="modal-buttons">
+              <button type="button" onclick="closePersonModal()">Cancel</button>
+
+              <button
+                type="button"
+                class="primary-modal-btn"
+                onclick="savePerson()"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- =====================================================
+     MANAGE NAMES MODAL
+===================================================== -->
+
+        <div id="manageNamesModal" class="person-modal">
+          <div class="person-modal-content">
+            <div class="person-modal-header">
+              <h3 id="manageNamesTitle">Manage Names</h3>
+
+              <button
+                type="button"
+                class="modal-close-btn"
+                onclick="closeManageNames()"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div id="namesList"></div>
+
+            <div class="modal-buttons">
+              <button type="button" onclick="closeManageNames()">Close</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="form-group">
+          <label for="stoneType">Stone Type</label>
+          <input
+            type="text"
+            id="stoneType"
+            placeholder="Black Granite / Marble"
+            />
+          </div> -->
+
+        <div class="form-group full-width">
+          <label for="remarks">Remarks</label>
+          <textarea
+            id="remarks"
+            rows="3"
+            placeholder="Optional notes..."
+          ></textarea>
+          <span class="clear-btn" onclick="clearField('remarks')">✕</span>
+        </div>
+      </div>
+      <div class="btn-container">
+        <button class="save-btn">Save Details</button>
+      </div>
+    </div>
+
+    <script>
+      flatpickr("#loadDate", {
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        disableMobile: true,
+      });
+      // =====================================================
+      // LOCAL STORAGE KEYS
+      // =====================================================
+
+      const DRIVER_KEY = "stoneCalculatorDrivers";
+      const MINING_OWNER_KEY = "stoneCalculatorMiningOwners";
+      const FACTORY_OWNER_KEY = "stoneCalculatorFactoryOwners";
+
+      // =====================================================
+      // LOAD SAVED DATA
+      // =====================================================
+
+      let drivers = JSON.parse(localStorage.getItem(DRIVER_KEY)) || [];
+
+      let miningOwners =
+        JSON.parse(localStorage.getItem(MINING_OWNER_KEY)) || [];
+
+      let factoryOwners =
+        JSON.parse(localStorage.getItem(FACTORY_OWNER_KEY)) || [];
+
+      // =====================================================
+      // CURRENT MODAL STATE
+      // =====================================================
+
+      let currentPersonType = null;
+      let editingPersonId = null;
+      let managePersonType = null;
+
+      // =====================================================
+      // GENERATE ID
+      // =====================================================
+
+      function generateId() {
+        return (
+          Date.now().toString(36) + Math.random().toString(36).substring(2)
+        );
+      }
+
+      // =====================================================
+      // SAVE DATA TO LOCAL STORAGE
+      // =====================================================
+
+      function savePeople() {
+        localStorage.setItem(DRIVER_KEY, JSON.stringify(drivers));
+
+        localStorage.setItem(MINING_OWNER_KEY, JSON.stringify(miningOwners));
+
+        localStorage.setItem(FACTORY_OWNER_KEY, JSON.stringify(factoryOwners));
+      }
+
+      // =====================================================
+      // LOAD ALL DROPDOWNS
+      // =====================================================
+
+      function loadPeople() {
+        loadDriverDropdown();
+
+        loadMiningOwnerDropdown();
+
+        loadFactoryOwnerDropdown();
+      }
+
+      // =====================================================
+      // DRIVER DROPDOWN
+      // =====================================================
+
+      function loadDriverDropdown() {
+        const select = document.getElementById("driverName");
+
+        select.innerHTML = `
+        <option value="">Select Driver</option>
+      `;
+
+        drivers.forEach((driver) => {
+          const option = document.createElement("option");
+
+          option.value = driver.id;
+
+          option.textContent = driver.name;
+
+          select.appendChild(option);
+        });
+
+        select.innerHTML += `
+        <option value="__add__">
+          ＋ Add Driver
+        </option>
+
+        <option value="__manage__">
+          ⚙ Manage Drivers
+        </option>
+      `;
+      }
+
+      // =====================================================
+      // MINING OWNER DROPDOWN
+      // =====================================================
+
+      function loadMiningOwnerDropdown() {
+        const select = document.getElementById("miningOwner");
+
+        select.innerHTML = `
+        <option value="">
+          Select Mining Owner
+        </option>
+      `;
+
+        miningOwners.forEach((owner) => {
+          const option = document.createElement("option");
+
+          option.value = owner.id;
+
+          option.textContent = owner.name;
+
+          select.appendChild(option);
+        });
+
+        select.innerHTML += `
+        <option value="__add__">
+          ＋ Add Mining Owner
+        </option>
+
+        <option value="__manage__">
+          ⚙ Manage Mining Owners
+        </option>
+      `;
+      }
+
+      // =====================================================
+      // FACTORY OWNER DROPDOWN
+      // =====================================================
+
+      function loadFactoryOwnerDropdown() {
+        const select = document.getElementById("factoryOwner");
+
+        select.innerHTML = `
+        <option value="">
+          Select Factory Owner
+        </option>
+      `;
+
+        factoryOwners.forEach((owner) => {
+          const option = document.createElement("option");
+
+          option.value = owner.id;
+
+          option.textContent = owner.name;
+
+          select.appendChild(option);
+        });
+
+        select.innerHTML += `
+        <option value="__add__">
+          ＋ Add Factory Owner
+        </option>
+
+        <option value="__manage__">
+          ⚙ Manage Factory Owners
+        </option>
+      `;
+      }
+
+      // =====================================================
+      // DRIVER DROPDOWN CHANGE
+      // =====================================================
+
+      document
+        .getElementById("driverName")
+        .addEventListener("change", function () {
+          if (this.value === "__add__") {
+            this.value = "";
+
+            openAddPerson("driver");
+          } else if (this.value === "__manage__") {
+            this.value = "";
+
+            openManageNames("driver");
+          }
+        });
+
+      // =====================================================
+      // MINING OWNER DROPDOWN CHANGE
+      // =====================================================
+
+      document
+        .getElementById("miningOwner")
+        .addEventListener("change", function () {
+          if (this.value === "__add__") {
+            this.value = "";
+
+            openAddPerson("miningOwner");
+
+            return;
+          }
+
+          if (this.value === "__manage__") {
+            this.value = "";
+
+            openManageNames("miningOwner");
+
+            return;
+          }
+
+          updateMiningPhone();
+        });
+
+      // =====================================================
+      // FACTORY OWNER DROPDOWN CHANGE
+      // =====================================================
+
+      document
+        .getElementById("factoryOwner")
+        .addEventListener("change", function () {
+          if (this.value === "__add__") {
+            this.value = "";
+
+            openAddPerson("factoryOwner");
+
+            return;
+          }
+
+          if (this.value === "__manage__") {
+            this.value = "";
+
+            openManageNames("factoryOwner");
+
+            return;
+          }
+
+          updateFactoryPhone();
+        });
+
+      // =====================================================
+      // OPEN ADD PERSON
+      // =====================================================
+
+      function openAddPerson(type) {
+        currentPersonType = type;
+
+        editingPersonId = null;
+
+        const modal = document.getElementById("personModal");
+
+        const title = document.getElementById("personModalTitle");
+
+        const nameInput = document.getElementById("personNameInput");
+
+        const phoneInput = document.getElementById("personPhoneInput");
+
+        const phoneGroup = document.getElementById("personPhoneGroup");
+
+        nameInput.value = "";
+
+        phoneInput.value = "";
+
+        if (type === "driver") {
+          title.textContent = "Add Driver";
+
+          phoneGroup.style.display = "none";
+        } else if (type === "miningOwner") {
+          title.textContent = "Add Mining Owner";
+
+          phoneGroup.style.display = "block";
+        } else {
+          title.textContent = "Add Factory Owner";
+
+          phoneGroup.style.display = "block";
+        }
+
+        modal.style.display = "flex";
+
+        nameInput.focus();
+      }
+
+      // =====================================================
+      // SAVE PERSON
+      // =====================================================
+
+      function savePerson() {
+        const nameInput = document.getElementById("personNameInput");
+
+        const phoneInput = document.getElementById("personPhoneInput");
+
+        const name = nameInput.value.trim().toUpperCase();
+
+        const phone = phoneInput.value.trim();
+
+        if (!name) {
+          alert("Please enter a name.");
+
+          return;
+        }
+
+        // Phone is optional
+
+        if (currentPersonType !== "driver" && phone !== "") {
+          if (!/^[0-9]{10}$/.test(phone)) {
+            alert("Enter a valid 10-digit phone number.");
+
+            return;
+          }
+        }
+
+        // ===================================================
+        // DRIVER
+        // ===================================================
+
+        if (currentPersonType === "driver") {
+          const duplicate = drivers.find(
+            (driver) => driver.name.toUpperCase() === name,
+          );
+
+          if (duplicate) {
+            alert("Driver already exists.");
+
+            return;
+          }
+
+          drivers.push({
+            id: generateId(),
+
+            name: name,
+          });
+        }
+
+        // ===================================================
+        // MINING OWNER
+        // ===================================================
+        else if (currentPersonType === "miningOwner") {
+          const duplicate = miningOwners.find(
+            (owner) => owner.name.toUpperCase() === name,
+          );
+
+          if (duplicate) {
+            alert("Mining Owner already exists.");
+
+            return;
+          }
+
+          miningOwners.push({
+            id: generateId(),
+
+            name: name,
+
+            phone: phone || "",
+          });
+        }
+
+        // ===================================================
+        // FACTORY OWNER
+        // ===================================================
+        else if (currentPersonType === "factoryOwner") {
+          const duplicate = factoryOwners.find(
+            (owner) => owner.name.toUpperCase() === name,
+          );
+
+          if (duplicate) {
+            alert("Factory Owner already exists.");
+
+            return;
+          }
+
+          factoryOwners.push({
+            id: generateId(),
+
+            name: name,
+
+            phone: phone || "",
+          });
+        }
+
+        savePeople();
+
+        loadPeople();
+
+        closePersonModal();
+      }
+
+      // =====================================================
+      // UPDATE MINING PHONE
+      // =====================================================
+
+      function updateMiningPhone() {
+        const id = document.getElementById("miningOwner").value;
+
+        const owner = miningOwners.find((item) => item.id === id);
+
+        const phone = document.getElementById("miningOwnerPhone");
+
+        const button = document.getElementById("saveMiningPhoneBtn");
+
+        if (!owner) {
+          phone.value = "";
+
+          button.style.display = "none";
+
+          return;
+        }
+
+        phone.value = owner.phone || "";
+
+        button.style.display = "block";
+      }
+
+      // =====================================================
+      // UPDATE FACTORY PHONE
+      // =====================================================
+
+      function updateFactoryPhone() {
+        const id = document.getElementById("factoryOwner").value;
+
+        const owner = factoryOwners.find((item) => item.id === id);
+
+        const phone = document.getElementById("factoryPhone");
+
+        const button = document.getElementById("saveFactoryPhoneBtn");
+
+        if (!owner) {
+          phone.value = "";
+
+          button.style.display = "none";
+
+          return;
+        }
+
+        phone.value = owner.phone || "";
+
+        button.style.display = "block";
+      }
+
+      // =====================================================
+      // SAVE / UPDATE MINING PHONE
+      // =====================================================
+
+      document
+        .getElementById("saveMiningPhoneBtn")
+        .addEventListener("click", function () {
+          const id = document.getElementById("miningOwner").value;
+
+          const phone = document
+            .getElementById("miningOwnerPhone")
+            .value.trim();
+
+          if (!id) {
+            alert("Please select a Mining Owner.");
+
+            return;
+          }
+
+          if (phone !== "" && !/^[0-9]{10}$/.test(phone)) {
+            alert("Enter a valid 10-digit phone number.");
+
+            return;
+          }
+
+          const owner = miningOwners.find((item) => item.id === id);
+
+          if (!owner) return;
+
+          owner.phone = phone;
+
+          savePeople();
+
+          alert("Mining Owner phone number updated.");
+        });
+
+      // =====================================================
+      // SAVE / UPDATE FACTORY PHONE
+      // =====================================================
+
+      document
+        .getElementById("saveFactoryPhoneBtn")
+        .addEventListener("click", function () {
+          const id = document.getElementById("factoryOwner").value;
+
+          const phone = document.getElementById("factoryPhone").value.trim();
+
+          if (!id) {
+            alert("Please select a Factory Owner.");
+
+            return;
+          }
+
+          if (phone !== "" && !/^[0-9]{10}$/.test(phone)) {
+            alert("Enter a valid 10-digit phone number.");
+
+            return;
+          }
+
+          const owner = factoryOwners.find((item) => item.id === id);
+
+          if (!owner) return;
+
+          owner.phone = phone;
+
+          savePeople();
+
+          alert("Factory Owner phone number updated.");
+        });
+
+      // =====================================================
+      // OPEN MANAGE NAMES
+      // =====================================================
+
+      function openManageNames(type) {
+        managePersonType = type;
+
+        const title = document.getElementById("manageNamesTitle");
+
+        if (type === "driver") {
+          title.textContent = "Manage Drivers";
+        } else if (type === "miningOwner") {
+          title.textContent = "Manage Mining Owners";
+        } else {
+          title.textContent = "Manage Factory Owners";
+        }
+
+        renderNamesList();
+
+        document.getElementById("manageNamesModal").style.display = "flex";
+      }
+
+      // =====================================================
+      // DISPLAY NAMES
+      // =====================================================
+
+      function renderNamesList() {
+        const list = document.getElementById("namesList");
+
+        let data;
+
+        if (managePersonType === "driver") {
+          data = drivers;
+        } else if (managePersonType === "miningOwner") {
+          data = miningOwners;
+        } else {
+          data = factoryOwners;
+        }
+
+        list.innerHTML = "";
+
+        if (data.length === 0) {
+          list.innerHTML = `
+          <div class="no-names">
+            No saved names.
+          </div>
+        `;
+
+          return;
+        }
+
+        data.forEach((person) => {
+          const row = document.createElement("div");
+
+          row.className = "name-row";
+
+          const phoneText =
+            managePersonType === "driver"
+              ? ""
+              : person.phone
+                ? person.phone
+                : "Phone not added";
+
+          row.innerHTML = `
+
+          <div class="name-details">
+
+            <strong>
+              ${escapeHTML(person.name)}
+            </strong>
+
+            ${
+              managePersonType !== "driver"
+                ? `
+                  <span>
+                    ${escapeHTML(phoneText)}
+                  </span>
+                `
+                : ""
+            }
+
+          </div>
+
+
+          <div class="name-actions">
+
+            <button
+              type="button"
+              class="edit-name-btn"
+              onclick="
+                editPerson('${person.id}')
+              "
+              title="Edit"
+            >
+              ✏️
+            </button>
+
+
+            <button
+              type="button"
+              class="delete-name-btn"
+              onclick="
+                deletePerson('${person.id}')
+              "
+              title="Delete"
+            >
+              🗑️
+            </button>
+
+          </div>
+        `;
+
+          list.appendChild(row);
+        });
+      }
+
+      // =====================================================
+      // EDIT PERSON
+      // =====================================================
+
+      function editPerson(id) {
+        let person;
+
+        if (managePersonType === "driver") {
+          person = drivers.find((item) => item.id === id);
+        } else if (managePersonType === "miningOwner") {
+          person = miningOwners.find((item) => item.id === id);
+        } else {
+          person = factoryOwners.find((item) => item.id === id);
+        }
+
+        if (!person) return;
+
+        currentPersonType = managePersonType;
+
+        editingPersonId = id;
+
+        document.getElementById("personNameInput").value = person.name;
+
+        document.getElementById("personPhoneInput").value = person.phone || "";
+
+        document.getElementById("personModalTitle").textContent =
+          "Edit " +
+          (managePersonType === "driver"
+            ? "Driver"
+            : managePersonType === "miningOwner"
+              ? "Mining Owner"
+              : "Factory Owner");
+
+        document.getElementById("personPhoneGroup").style.display =
+          managePersonType === "driver" ? "none" : "block";
+
+        closeManageNames();
+
+        document.getElementById("personModal").style.display = "flex";
+      }
+
+      // =====================================================
+      // DELETE PERSON
+      // =====================================================
+
+      function deletePerson(id) {
+        const confirmDelete = confirm(
+          "Are you sure you want to delete this name?",
+        );
+
+        if (!confirmDelete) return;
+
+        if (managePersonType === "driver") {
+          drivers = drivers.filter((item) => item.id !== id);
+        } else if (managePersonType === "miningOwner") {
+          miningOwners = miningOwners.filter((item) => item.id !== id);
+        } else {
+          factoryOwners = factoryOwners.filter((item) => item.id !== id);
+        }
+
+        savePeople();
+
+        loadPeople();
+
+        renderNamesList();
+      }
+
+      // =====================================================
+      // CLOSE PERSON MODAL
+      // =====================================================
+
+      function closePersonModal() {
+        document.getElementById("personModal").style.display = "none";
+
+        currentPersonType = null;
+
+        editingPersonId = null;
+      }
+
+      // =====================================================
+      // CLOSE MANAGE MODAL
+      // =====================================================
+
+      function closeManageNames() {
+        document.getElementById("manageNamesModal").style.display = "none";
+
+        managePersonType = null;
+      }
+
+      // =====================================================
+      // ESCAPE HTML
+      // =====================================================
+
+      function escapeHTML(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      // =====================================================
+      // INITIALIZE
+      // =====================================================
+
+      //clear fields
+      function clearField(id) {
+        document.getElementById(id).value = "";
+        document.getElementById(id).focus();
+      }
+
+      //custom pop up messages
+      function showAlert(message) {
+        document.getElementById("alertMessage").textContent = message;
+        document.getElementById("customAlert").style.display = "block";
+      }
+
+      function closeAlert() {
+        document.getElementById("customAlert").style.display = "none";
+      }
+
+      //IMask, which handles cursor position correctly while correcting the date.
+      IMask(document.getElementById("loadDate"), {
+        mask: "00/00/0000",
+      });
+
+      //Restoring the values
+      // window.addEventListener("DOMContentLoaded", () => {
+      //   const savedData = JSON.parse(localStorage.getItem("loadDetails"));
+      //   // console.log(savedData);
+      //   if (savedData) {
+      //     document.getElementById("loadDate").value =
+      //       savedData.DateOfLoading || "";
+      //     document.getElementById("stoneType").value =
+      //       savedData.StoneType || "";
+
+      //     document.getElementById("vehicleNo").value =
+      //       savedData.vehicleNo || "";
+
+      //     document.getElementById("driverName").value =
+      //       savedData.driverName || "";
+
+      //     document.getElementById("miningOwner").value =
+      //       savedData.miningOwner || "";
+
+      //     document.getElementById("miningOwnerPhone").value =
+      //       savedData.miningOwnerPhone || "";
+
+      //     document.getElementById("factoryOwner").value =
+      //       savedData.factoryOwner || "";
+
+      //     document.getElementById("factoryPhone").value =
+      //       savedData.factoryPhone || "";
+      //   }
+      // });
+      window.addEventListener("DOMContentLoaded", () => {
+        loadPeople();
+        const savedData = JSON.parse(localStorage.getItem("loadDetails"));
+
+        if (!savedData) return;
+
+        // -----------------------------
+        // BASIC LOAD DETAILS
+        // -----------------------------
+
+        document.getElementById("loadDate").value =
+          savedData.DateOfLoading || "";
+
+        document.getElementById("stoneType").value = savedData.StoneType || "";
+
+        document.getElementById("vehicleNo").value = savedData.vehicleNo || "";
+
+        // -----------------------------
+        // DRIVER
+        // -----------------------------
+
+        const driver = drivers.find((d) => d.name === savedData.driverName);
+
+        if (driver) {
+          document.getElementById("driverName").value = driver.id;
+        }
+
+        // -----------------------------
+        // MINING OWNER
+        // -----------------------------
+
+        const miningOwner = miningOwners.find(
+          (owner) => owner.name === savedData.miningOwner,
+        );
+
+        if (miningOwner) {
+          document.getElementById("miningOwner").value = miningOwner.id;
+
+          document.getElementById("miningOwnerPhone").value =
+            miningOwner.phone || savedData.miningOwnerPhone || "";
+        } else {
+          document.getElementById("miningOwnerPhone").value =
+            savedData.miningOwnerPhone || "";
+        }
+
+        // -----------------------------
+        // FACTORY OWNER
+        // -----------------------------
+
+        const factoryOwner = factoryOwners.find(
+          (owner) => owner.name === savedData.factoryOwner,
+        );
+
+        if (factoryOwner) {
+          document.getElementById("factoryOwner").value = factoryOwner.id;
+
+          document.getElementById("factoryPhone").value =
+            factoryOwner.phone || savedData.factoryPhone || "";
+        } else {
+          document.getElementById("factoryPhone").value =
+            savedData.factoryPhone || "";
+        }
+
+        // -----------------------------
+        // REMARKS
+        // -----------------------------
+
+        document.getElementById("remarks").value = savedData.remarks || "";
+      });
+
+      //formatting the date & adding slashes in b/w the date
+      const loadDate = document.getElementById("loadDate");
+      const dateError = document.getElementById("dateError");
+
+      // Auto-insert /
+      loadDate.addEventListener("input", (e) => {
+        let value = e.target.value.replace(/\D/g, "");
+
+        if (value.length > 2) {
+          value = value.slice(0, 2) + "/" + value.slice(2);
+        }
+
+        if (value.length > 5) {
+          value = value.slice(0, 5) + "/" + value.slice(5, 9);
+        }
+
+        e.target.value = value;
+      });
+
+      const phoneInputs = [
+        document.getElementById("miningOwnerPhone"),
+        document.getElementById("factoryPhone"),
+      ];
+
+      phoneInputs.forEach((input) => {
+        input.addEventListener("input", () => {
+          input.value = input.value.replace(/\D/g, "").slice(0, 10);
+        });
+      });
+
+      //storing the values in local storage
+      document.querySelector(".save-btn").addEventListener("click", () => {
+        // const date = new Date(document.getElementById("loadDate").value);
+
+        // const dd = String(date.getDate()).padStart(2, "0");
+        // const mm = String(date.getMonth() + 1).padStart(2, "0");
+        // const yy = String(date.getFullYear());
+
+        const loadDate = document.getElementById("loadDate").value;
+        const parts = loadDate.split("/");
+        if (parts.length !== 3) {
+          showAlert("Please enter a valid date (DD/MM/YYYY)");
+          return; // Stops execution
+        }
+
+        const [dd, mm, yyyy] = loadDate.split("/").map(Number);
+
+        // Day validation
+        if (dd < 1 || dd > 31) {
+          showAlert(`Invalid day (${dd}). Day must be between 01 and 31.`);
+          return;
+        }
+
+        // Month validation
+        if (mm < 1 || mm > 12) {
+          showAlert(`Invalid month (${mm}). Month must be between 01 and 12.`);
+          return;
+        }
+
+        // Year validation
+        if (yyyy < 2000 || yyyy > 2100) {
+          showAlert(
+            `Invalid year (${yyyy}). Please enter a valid year upto 2100.`,
+          );
+          return;
+        }
+
+        // Full date validation
+        const date = new Date(yyyy, mm - 1, dd);
+
+        if (
+          date.getFullYear() !== yyyy ||
+          date.getMonth() !== mm - 1 ||
+          date.getDate() !== dd
+        ) {
+          showAlert(
+            `The date ${loadDate} is not valid. Month ${mm} does not have ${dd} days.`,
+          );
+          return;
+        }
+
+        //phone number validations
+        const miningPhone = document
+          .getElementById("miningOwnerPhone")
+          .value.trim();
+
+        const factoryPhone = document
+          .getElementById("factoryPhone")
+          .value.trim();
+
+        const mobileRegex = /^[6-9]\d{9}$/;
+
+        // Mining Owner Phone (Required)
+        if (miningPhone !== "" && !mobileRegex.test(miningPhone)) {
+          showAlert(
+            "Mining Owner Phone Number must be a valid 10-digit mobile number.Remember mobile numbers shuold starts with 6, 7, 8, or 9",
+          );
+          return;
+        }
+
+        // Factory Phone (Optional)
+        // Validate only if user entered a value
+        if (factoryPhone !== "" && !mobileRegex.test(factoryPhone)) {
+          showAlert(
+            "Factory Owner Phone Number must be a valid 10-digit mobile number.Remember mobile numbers shuold starts with 6, 7, 8, or 9",
+          );
+          return;
+        }
+
+        const driverId = document.getElementById("driverName").value;
+
+        const miningOwnerId = document.getElementById("miningOwner").value;
+
+        const factoryOwnerId = document.getElementById("factoryOwner").value;
+
+        // Find selected records
+        const selectedDriver = drivers.find((driver) => driver.id === driverId);
+
+        const selectedMiningOwner = miningOwners.find(
+          (owner) => owner.id === miningOwnerId,
+        );
+
+        const selectedFactoryOwner = factoryOwners.find(
+          (owner) => owner.id === factoryOwnerId,
+        );
+
+        // Check what was found
+        console.log("Selected Factory Owner:", selectedFactoryOwner);
+        console.log("Factory Phone:", selectedFactoryOwner?.phone);
+        const loadDetails = {
+          DateOfLoading: document.getElementById("loadDate").value,
+
+          StoneType: document.getElementById("stoneType").value,
+
+          vehicleNo: document.getElementById("vehicleNo").value,
+
+          driverName: selectedDriver?.name || "",
+
+          miningOwner: selectedMiningOwner?.name || "",
+
+          miningOwnerPhone: selectedMiningOwner?.phone || "",
+
+          factoryOwner: selectedFactoryOwner?.name || "",
+
+          factoryOwnerPhone: selectedFactoryOwner?.phone || "",
+
+          remarks: document.getElementById("remarks").value,
+        };
+        console.log(loadDetails);
+        localStorage.setItem("loadDetails", JSON.stringify(loadDetails));
+
+        Swal.fire({
+          icon: "success",
+          title: "Saved Successfully",
+          text: "Load details have been saved successfully.",
+          confirmButtonText: "OK",
+        }).then(() => {
+          window.location.href = "index.html";
+        });
+      });
+
+      // console.log(localStorage.getItem("loadDetails"));
+      // console.log(localStorage.getItem("stoneCalculatorMiningOwners"));
+      // console.log(localStorage.getItem("stoneCalculatorFactoryOwners"));
+    </script>
+  </body>
+</html>
