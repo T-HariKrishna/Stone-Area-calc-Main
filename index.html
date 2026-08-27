@@ -3,6 +3,21 @@
   <head>
     <title>Stone Area Calculator-THK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'G-MXB2GDH4N1');
+</script>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
       * {
@@ -1748,6 +1763,10 @@ CALCULATE TOTAL
         setTimeout(() => {
           totalEle.style.animation = "pulse 0.5s ease-out";
         }, 10);
+
+         gtag('event', 'stone_calculation', {
+        calculator: 'stone_area_calculator'
+    });
       }
 
 
@@ -1809,6 +1828,9 @@ function saveToHistory() {
   title: "No Data Found",
   text: "Please add some data before saving.",
   confirmButtonText: "OK"
+
+
+  
 });
     return;
   }
@@ -1885,6 +1907,10 @@ console.log("rows length:", rows.length);
     // setTimeout(() => {
     //     document.getElementById("successMsg").style.display = "none";
     // }, 10000);
+
+    gtag('event', 'report_generated', {
+    calculator: 'stone_area_calculator'
+});
 }
 
 
