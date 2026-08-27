@@ -632,18 +632,13 @@
         allowInput: true,
         disableMobile: true,
       });
-      // =====================================================
-      // LOCAL STORAGE KEYS
-      // =====================================================
 
+      // LOCAL STORAGE KEYS
       const DRIVER_KEY = "stoneCalculatorDrivers";
       const MINING_OWNER_KEY = "stoneCalculatorMiningOwners";
       const FACTORY_OWNER_KEY = "stoneCalculatorFactoryOwners";
 
-      // =====================================================
       // LOAD SAVED DATA
-      // =====================================================
-
       let drivers = JSON.parse(localStorage.getItem(DRIVER_KEY)) || [];
 
       let miningOwners =
@@ -652,17 +647,13 @@
       let factoryOwners =
         JSON.parse(localStorage.getItem(FACTORY_OWNER_KEY)) || [];
 
-      // =====================================================
       // CURRENT MODAL STATE
-      // =====================================================
 
       let currentPersonType = null;
       let editingPersonId = null;
       let managePersonType = null;
 
-      // =====================================================
       // GENERATE ID
-      // =====================================================
 
       function generateId() {
         return (
@@ -670,9 +661,7 @@
         );
       }
 
-      // =====================================================
       // SAVE DATA TO LOCAL STORAGE
-      // =====================================================
 
       function savePeople() {
         localStorage.setItem(DRIVER_KEY, JSON.stringify(drivers));
@@ -682,9 +671,7 @@
         localStorage.setItem(FACTORY_OWNER_KEY, JSON.stringify(factoryOwners));
       }
 
-      // =====================================================
       // LOAD ALL DROPDOWNS
-      // =====================================================
 
       function loadPeople() {
         loadDriverDropdown();
@@ -694,9 +681,7 @@
         loadFactoryOwnerDropdown();
       }
 
-      // =====================================================
       // DRIVER DROPDOWN
-      // =====================================================
 
       function loadDriverDropdown() {
         const select = document.getElementById("driverName");
@@ -726,9 +711,7 @@
       `;
       }
 
-      // =====================================================
       // MINING OWNER DROPDOWN
-      // =====================================================
 
       function loadMiningOwnerDropdown() {
         const select = document.getElementById("miningOwner");
@@ -760,9 +743,7 @@
       `;
       }
 
-      // =====================================================
       // FACTORY OWNER DROPDOWN
-      // =====================================================
 
       function loadFactoryOwnerDropdown() {
         const select = document.getElementById("factoryOwner");
@@ -794,9 +775,7 @@
       `;
       }
 
-      // =====================================================
       // DRIVER DROPDOWN CHANGE
-      // =====================================================
 
       document
         .getElementById("driverName")
@@ -812,9 +791,7 @@
           }
         });
 
-      // =====================================================
       // MINING OWNER DROPDOWN CHANGE
-      // =====================================================
 
       document
         .getElementById("miningOwner")
@@ -838,9 +815,7 @@
           updateMiningPhone();
         });
 
-      // =====================================================
       // FACTORY OWNER DROPDOWN CHANGE
-      // =====================================================
 
       document
         .getElementById("factoryOwner")
@@ -864,10 +839,7 @@
           updateFactoryPhone();
         });
 
-      // =====================================================
       // OPEN ADD PERSON
-      // =====================================================
-
       function openAddPerson(type) {
         currentPersonType = type;
 
@@ -906,9 +878,7 @@
         nameInput.focus();
       }
 
-      // =====================================================
       // SAVE PERSON
-      // =====================================================
 
       function savePerson() {
         const nameInput = document.getElementById("personNameInput");
@@ -935,10 +905,7 @@
           }
         }
 
-        // ===================================================
         // DRIVER
-        // ===================================================
-
         if (currentPersonType === "driver") {
           const duplicate = drivers.find(
             (driver) => driver.name.toUpperCase() === name,
@@ -957,9 +924,7 @@
           });
         }
 
-        // ===================================================
         // MINING OWNER
-        // ===================================================
         else if (currentPersonType === "miningOwner") {
           const duplicate = miningOwners.find(
             (owner) => owner.name.toUpperCase() === name,
@@ -980,9 +945,7 @@
           });
         }
 
-        // ===================================================
         // FACTORY OWNER
-        // ===================================================
         else if (currentPersonType === "factoryOwner") {
           const duplicate = factoryOwners.find(
             (owner) => owner.name.toUpperCase() === name,
@@ -1010,10 +973,7 @@
         closePersonModal();
       }
 
-      // =====================================================
       // UPDATE MINING PHONE
-      // =====================================================
-
       function updateMiningPhone() {
         const id = document.getElementById("miningOwner").value;
 
@@ -1036,10 +996,7 @@
         button.style.display = "block";
       }
 
-      // =====================================================
       // UPDATE FACTORY PHONE
-      // =====================================================
-
       function updateFactoryPhone() {
         const id = document.getElementById("factoryOwner").value;
 
@@ -1062,10 +1019,7 @@
         button.style.display = "block";
       }
 
-      // =====================================================
       // SAVE / UPDATE MINING PHONE
-      // =====================================================
-
       document
         .getElementById("saveMiningPhoneBtn")
         .addEventListener("click", function () {
@@ -1098,10 +1052,7 @@
           alert("Mining Owner phone number updated.");
         });
 
-      // =====================================================
       // SAVE / UPDATE FACTORY PHONE
-      // =====================================================
-
       document
         .getElementById("saveFactoryPhoneBtn")
         .addEventListener("click", function () {
@@ -1132,10 +1083,7 @@
           alert("Factory Owner phone number updated.");
         });
 
-      // =====================================================
       // OPEN MANAGE NAMES
-      // =====================================================
-
       function openManageNames(type) {
         managePersonType = type;
 
@@ -1154,10 +1102,7 @@
         document.getElementById("manageNamesModal").style.display = "flex";
       }
 
-      // =====================================================
       // DISPLAY NAMES
-      // =====================================================
-
       function renderNamesList() {
         const list = document.getElementById("namesList");
 
@@ -1248,10 +1193,7 @@
         });
       }
 
-      // =====================================================
       // EDIT PERSON
-      // =====================================================
-
       function editPerson(id) {
         let person;
 
@@ -1289,10 +1231,7 @@
         document.getElementById("personModal").style.display = "flex";
       }
 
-      // =====================================================
       // DELETE PERSON
-      // =====================================================
-
       function deletePerson(id) {
         const confirmDelete = confirm(
           "Are you sure you want to delete this name?",
@@ -1315,10 +1254,7 @@
         renderNamesList();
       }
 
-      // =====================================================
       // CLOSE PERSON MODAL
-      // =====================================================
-
       function closePersonModal() {
         document.getElementById("personModal").style.display = "none";
 
@@ -1327,19 +1263,12 @@
         editingPersonId = null;
       }
 
-      // =====================================================
       // CLOSE MANAGE MODAL
-      // =====================================================
-
       function closeManageNames() {
         document.getElementById("manageNamesModal").style.display = "none";
 
         managePersonType = null;
       }
-
-      // =====================================================
-      // ESCAPE HTML
-      // =====================================================
 
       function escapeHTML(value) {
         return String(value)
@@ -1349,10 +1278,6 @@
           .replace(/"/g, "&quot;")
           .replace(/'/g, "&#039;");
       }
-
-      // =====================================================
-      // INITIALIZE
-      // =====================================================
 
       //clear fields
       function clearField(id) {
@@ -1375,45 +1300,13 @@
         mask: "00/00/0000",
       });
 
-      //Restoring the values
-      // window.addEventListener("DOMContentLoaded", () => {
-      //   const savedData = JSON.parse(localStorage.getItem("loadDetails"));
-      //   // console.log(savedData);
-      //   if (savedData) {
-      //     document.getElementById("loadDate").value =
-      //       savedData.DateOfLoading || "";
-      //     document.getElementById("stoneType").value =
-      //       savedData.StoneType || "";
-
-      //     document.getElementById("vehicleNo").value =
-      //       savedData.vehicleNo || "";
-
-      //     document.getElementById("driverName").value =
-      //       savedData.driverName || "";
-
-      //     document.getElementById("miningOwner").value =
-      //       savedData.miningOwner || "";
-
-      //     document.getElementById("miningOwnerPhone").value =
-      //       savedData.miningOwnerPhone || "";
-
-      //     document.getElementById("factoryOwner").value =
-      //       savedData.factoryOwner || "";
-
-      //     document.getElementById("factoryPhone").value =
-      //       savedData.factoryPhone || "";
-      //   }
-      // });
       window.addEventListener("DOMContentLoaded", () => {
         loadPeople();
         const savedData = JSON.parse(localStorage.getItem("loadDetails"));
 
         if (!savedData) return;
 
-        // -----------------------------
         // BASIC LOAD DETAILS
-        // -----------------------------
-
         document.getElementById("loadDate").value =
           savedData.DateOfLoading || "";
 
@@ -1421,20 +1314,14 @@
 
         document.getElementById("vehicleNo").value = savedData.vehicleNo || "";
 
-        // -----------------------------
         // DRIVER
-        // -----------------------------
-
         const driver = drivers.find((d) => d.name === savedData.driverName);
 
         if (driver) {
           document.getElementById("driverName").value = driver.id;
         }
 
-        // -----------------------------
         // MINING OWNER
-        // -----------------------------
-
         const miningOwner = miningOwners.find(
           (owner) => owner.name === savedData.miningOwner,
         );
@@ -1449,10 +1336,7 @@
             savedData.miningOwnerPhone || "";
         }
 
-        // -----------------------------
         // FACTORY OWNER
-        // -----------------------------
-
         const factoryOwner = factoryOwners.find(
           (owner) => owner.name === savedData.factoryOwner,
         );
@@ -1467,10 +1351,7 @@
             savedData.factoryPhone || "";
         }
 
-        // -----------------------------
         // REMARKS
-        // -----------------------------
-
         document.getElementById("remarks").value = savedData.remarks || "";
       });
 
@@ -1506,12 +1387,6 @@
 
       //storing the values in local storage
       document.querySelector(".save-btn").addEventListener("click", () => {
-        // const date = new Date(document.getElementById("loadDate").value);
-
-        // const dd = String(date.getDate()).padStart(2, "0");
-        // const mm = String(date.getMonth() + 1).padStart(2, "0");
-        // const yy = String(date.getFullYear());
-
         const loadDate = document.getElementById("loadDate").value;
         const parts = loadDate.split("/");
         if (parts.length !== 3) {
