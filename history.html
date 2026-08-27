@@ -416,10 +416,7 @@
       }
     }
 
-    /*history css*/
-    /* ==========================================
-    FACTORY HISTORY
-    ========================================== */
+    /* FACTORY HISTORY*/
 
     .factory-history-section {
       margin-bottom: 25px;
@@ -499,9 +496,7 @@
       gap: 12px;
     }
 
-    /* ==========================================
-    OVERALL TOTAL
-    ========================================== */
+    /*OVERALL TOTAL */
 
     .stone-summary div {
       width: 100px;
@@ -535,10 +530,6 @@
       font-size: 16px;
       font-weight: 900;
     }
-
-    /* ==========================================
-    MOBILE
-    ========================================== */
 
     @media (max-width: 700px) {
       .factory-history-header {
@@ -581,7 +572,7 @@
       <p id="date" class="date-header">Date: --/--/----</p> -->
 
       <h1>Saved Reports History</h1>
-      <p class="subtitle">View and Manage Local Stone Load Entries</p>
+      <p class="subtitle">View and Manage Stone Load Entries Locally</p>
 
       <nav class="navbar">
         <div class="nav-links">
@@ -619,8 +610,8 @@
       <div id="historyContainer">
         <!-- Rendered dynamically -->
         <div class="no-history">
-          No saved reports found. Run a calculation and export or save it to
-          store history locally.
+          No saved reports found. Run a calculation and save it to store history
+          locally.
         </div>
       </div>
     </div>
@@ -639,14 +630,19 @@
 
         const clearBtn = document.getElementById("clearHistoryBtn");
 
-        // =====================================================
         // NO HISTORY
-        // =====================================================
-
         if (history.length === 0) {
-          document.getElementById("kolathaluSum").textContent = "0.00";
-          document.getElementById("mandhaluSum").textContent = "0.00";
+          const kolathaluSumElement = document.getElementById("kolathaluSum");
 
+          const mandhaluSumElement = document.getElementById("mandhaluSum");
+
+          if (kolathaluSumElement) {
+            kolathaluSumElement.textContent = "0.00";
+          }
+
+          if (mandhaluSumElement) {
+            mandhaluSumElement.textContent = "0.00";
+          }
           container.innerHTML = `
       <div class="no-history">
         No saved reports found.
@@ -661,10 +657,7 @@
         clearBtn.style.display = "inline-flex";
         container.innerHTML = "";
 
-        // =====================================================
         // OVERALL TOTALS
-        // =====================================================
-
         let overallKolathaluLoads = 0;
         let overallMandhaluLoads = 0;
 
@@ -674,10 +667,7 @@
         let overallKolathaluSqFt = 0;
         let overallMandhaluSqFt = 0;
 
-        // =====================================================
         // GROUP REPORTS BY FACTORY
-        // =====================================================
-
         const factoryGroups = {};
 
         history.forEach((report) => {
@@ -707,10 +697,7 @@
 
           const sqFt = Number(report.totalSqFt || 0);
 
-          // ===================================================
           // KOLATHALU
-          // ===================================================
-
           if (stoneType === "Kolathalu(కొలతలు)") {
             factoryGroups[factoryName].kolathaluLoads++;
 
@@ -721,9 +708,7 @@
             overallKolathaluSqFt += sqFt;
           }
 
-          // ===================================================
           // MANDHALU
-          // ===================================================
           else if (stoneType === "Mandhalu(మందలు)") {
             factoryGroups[factoryName].mandhaluLoads++;
 
@@ -735,10 +720,7 @@
           }
         });
 
-        // =====================================================
         // DISPLAY EACH FACTORY
-        // =====================================================
-
         Object.entries(factoryGroups).forEach(([factoryName, group]) => {
           // Factory total loads
           const totalLoads = group.kolathaluLoads + group.mandhaluLoads;
@@ -747,18 +729,12 @@
           const totalChadaralu =
             group.kolathaluChadaralu + group.mandhaluChadaralu;
 
-          // =================================================
           // FACTORY SECTION
-          // =================================================
-
           const factorySection = document.createElement("div");
 
           factorySection.className = "factory-history-section";
 
-          // =================================================
           // FACTORY HEADER
-          // =================================================
-
           factorySection.innerHTML = `
         <div class="factory-history-header">
 
@@ -820,18 +796,12 @@
 </div>
       `;
 
-          // =================================================
           // REPORTS CONTAINER
-          // =================================================
-
           const reportsContainer = document.createElement("div");
 
           reportsContainer.className = "factory-reports";
 
-          // =================================================
           // DISPLAY REPORTS
-          // =================================================
-
           group.reports.forEach((report) => {
             const date = new Date(report.date).toLocaleString("en-GB", {
               day: "2-digit",
@@ -858,10 +828,8 @@
 
             const factoryOwner =
               report.loadDetails?.factoryOwner?.trim() || "No Factory Name";
-            // =================================================
-            // HISTORY CARD
-            // =================================================
 
+            // HISTORY CARD
             const card = document.createElement("div");
 
             card.className = "history-card";
@@ -1039,18 +1007,21 @@
 
         container.prepend(overallElement);
 
-        // =====================================================
         // EXISTING SQFT TOTALS
-        // =====================================================
+        const kolathaluSumElement = document.getElementById("kolathaluSum");
 
-        document.getElementById("kolathaluSum").textContent =
-          overallKolathaluSqFt.toFixed(2);
+        const mandhaluSumElement = document.getElementById("mandhaluSum");
 
-        document.getElementById("mandhaluSum").textContent =
-          overallMandhaluSqFt.toFixed(2);
+        if (kolathaluSumElement) {
+          kolathaluSumElement.textContent = overallKolathaluSqFt.toFixed(2);
+        }
+
+        if (mandhaluSumElement) {
+          mandhaluSumElement.textContent = overallMandhaluSqFt.toFixed(2);
+        }
       }
 
-      //------------rentor history----------------------------------
+      //------------render history----------------------------------
       /**
        * Shows the load details.
        * Can be called with the report ID, the full report object, or individual fields.
@@ -1346,7 +1317,6 @@
           }
         });
       }
-
       function clearAllHistory() {
         Swal.fire({
           title: "Delete All Reports?",
