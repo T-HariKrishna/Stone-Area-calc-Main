@@ -6,6 +6,11 @@
     <title>Saved History Logs - Stone Calculator</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Telugu Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <style>
     :root {
@@ -35,6 +40,8 @@
       font-family: "Segoe UI", sans-serif;
       background: #84ccc6;
       color: var(--text-dark);
+
+      font-family: "Noto Sans Telugu", sans-serif;
     }
 
     /* MAIN WRAPPER */
@@ -69,8 +76,8 @@
     }
 
     /* #historyContainer {
-      width: auto;
-    } */
+       width: auto;
+     } */
 
     /* HISTORY CARD */
     .history-card {
@@ -84,7 +91,6 @@
       transition: all 0.3s ease;
     }
     .stone-summary {
-      /* border: 1px solid black; */
       display: flex;
       gap: 12px;
       margin: 30px 0px 15px;
@@ -318,24 +324,12 @@
         margin-left: 50px;
       }
 
-      .stone-summary div {
-        width: 100px;
-        padding: 12px;
-        font-size: 13px;
-        /* border: 1px solid black; */
-      }
-
-      .stone-summary span {
-        /* border: 1px solid black; */
-        font-size: 19px;
-      }
       #clearHistoryBtn {
         font-size: 10px;
       }
 
       .history-card {
         max-height: auto;
-        border: 1px solid black;
         padding: 10px;
         width: auto;
       }
@@ -343,10 +337,11 @@
         font-size: 8.5px;
       }
       .history-card-header {
-        font-size: 8px;
+        /* border: 1px solid black; */
         font-weight: 800;
         /* text-align: center; */
         word-break: keep-all;
+        font-size: 9px;
         /* border: 1px solid black; */
       }
 
@@ -409,8 +404,8 @@
 
       .calculator-wrapper {
         /* width: 900%;
-        max-width: 405px;
-        margin: 0 auto; */
+         max-width: 405px;
+         margin: 0 auto; */
         background: #c7e9e6;
       }
       h1 {
@@ -423,8 +418,8 @@
 
     /*history css*/
     /* ==========================================
-   FACTORY HISTORY
-   ========================================== */
+    FACTORY HISTORY
+    ========================================== */
 
     .factory-history-section {
       margin-bottom: 25px;
@@ -459,81 +454,43 @@
     }
 
     /* Summary */
-
     .factory-load-summary {
       display: flex;
       align-items: stretch;
       gap: 8px;
     }
 
-    /* Each type box */
-
     .load-type {
-      min-width: 90px;
-
-      padding: 6px 9px;
-
+      min-width: 100px;
+      padding: 8px 10px;
       border-radius: 8px;
-
       text-align: center;
-
-      background: rgba(126, 218, 211, 0.65);
+      background: rgba(140, 233, 228, 0.925);
+      color: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
     }
-
-    /* Stone type */
 
     .load-type > span {
-      display: block;
-
-      font-size: 15px;
-      font-weight: 800;
-
-      margin-bottom: 4px;
-
-      color: #0f172a;
-    }
-
-    /* Load / Chadaralu row */
-
-    .load-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      gap: 5px;
-
-      line-height: 1.4;
-    }
-
-    /* Labels */
-
-    .load-type small {
-      font-size: 11px;
-      color: black;
+      font-size: 16px;
       font-weight: 900;
+      color: black;
+      margin-bottom: 2px;
+      /* border: 1px solid black; */
+      font-family: "Noto Sans Telugu", sans-serif;
     }
 
-    /* Numbers */
+    .load-type > strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.3;
 
-    .load-type strong {
-      font-size: 15px;
-      font-weight: 800;
-
-      color: #166534;
+      /* border: 1px solid black; */
+      font-family: "Noto Sans Telugu", sans-serif;
     }
-
-    /* Total box */
-
-    .total-load {
-      background: #0f172a;
-    }
-
-    .total-load > span,
-    .total-load small,
-    .total-load strong {
-      color: white;
-    }
-
     /* Reports */
 
     .factory-reports {
@@ -543,59 +500,45 @@
     }
 
     /* ==========================================
-   OVERALL TOTAL
-   ========================================== */
+    OVERALL TOTAL
+    ========================================== */
 
-    .overall-chadaralu-total {
+    .stone-summary div {
+      width: 100px;
+      padding: 8px;
+      font-size: 13px;
+      /* border: 1px solid black; */
+      color: black;
+      background: rgb(24, 206, 115);
+    }
+
+    .stone-summary span {
+      /* border: 1px solid black; */
+      /* font-size: 9px; */
+      color: black;
+      text-decoration: underline;
+    }
+    .stone-summary > div {
       display: flex;
-      justify-content: space-around;
+      flex-direction: column;
       align-items: center;
-
-      gap: 15px;
-
-      margin-top: 25px;
-
-      padding: 16px 20px;
-
-      border-radius: 12px;
-
-      background: #0f172a;
-
-      color: white;
+      gap: 4px;
     }
 
-    .overall-chadaralu-total div {
-      text-align: center;
-    }
-
-    .overall-chadaralu-total span {
-      display: block;
-
-      font-size: 14px;
+    .stone-summary > div > span {
+      font-size: 15px;
       font-weight: 800;
-
-      margin-bottom: 5px;
     }
 
-    .overall-chadaralu-total small {
-      font-size: 10px;
-
-      margin-right: 4px;
-
-      color: #cbd5e1;
-    }
-
-    .overall-chadaralu-total strong {
-      font-size: 18px;
-
-      margin-right: 8px;
-
-      color: white;
+    .stone-summary > div > strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 900;
     }
 
     /* ==========================================
-   MOBILE
-   ========================================== */
+    MOBILE
+    ========================================== */
 
     @media (max-width: 700px) {
       .factory-history-header {
@@ -647,7 +590,7 @@
           <a href="history.html">History</a>
         </div>
       </nav>
-      <div class="stone-summary">
+      <!-- <div class="stone-summary">
         <div>
           Kolathalu(కొలతలు) మొత్తం చదరపు అడుగులు
           <span id="kolathaluSum">0</span>
@@ -657,7 +600,7 @@
           Mandhalu(మందలు) మొత్తం చదరపు అడుగులు
           <span id="mandhaluSum">0</span>
         </div>
-      </div>
+      </div> -->
 
       <div
         style="display: flex; justify-content: flex-end; margin-bottom: 20px"
@@ -689,109 +632,6 @@
         renderHistory();
       });
 
-      // function renderHistory() {
-      //   const history = JSON.parse(localStorage.getItem("reportHistory")) || [];
-      //   const container = document.getElementById("historyContainer");
-      //   const clearBtn = document.getElementById("clearHistoryBtn");
-
-      //   if (history.length === 0) {
-      //     document.getElementById("kolathaluSum").textContent = 0;
-      //     document.getElementById("mandhaluSum").textContent = 0;
-
-      //     container.innerHTML = `<div class="no-history">No saved reports found. Run a calculation and export or save it to store history locally.</div>`;
-      //     clearBtn.style.display = "none";
-      //     return;
-      //   }
-
-      //   clearBtn.style.display = "inline-flex";
-      //   container.innerHTML = "";
-
-      //   let stoneTypeText = "";
-      //   let kolathaluSum = 0;
-      //   let mandhaluSum = 0;
-
-      //   history.forEach((report) => {
-      //     const date = new Date(report.date).toLocaleString("en-GB", {
-      //       day: "2-digit",
-      //       month: "2-digit",
-      //       year: "numeric",
-      //     });
-      //     const detailedDate = new Date(report.date).toLocaleString("en-GB", {
-      //       day: "2-digit",
-      //       month: "2-digit",
-      //       year: "numeric",
-      //       hour: "2-digit",
-      //       minute: "2-digit",
-      //       second: "2-digit",
-      //       hour12: true,
-      //     });
-      //     // console.log(report.loadDetails);
-      //     const vehicle = report.loadDetails?.vehicleNo || "N/A";
-      //     const stoneType = report.loadDetails?.StoneType || "N/A";
-      //     const total = Number(report.totalSqFt || 0);
-      //     console.log(stoneType);
-
-      //     if (stoneType === "Kolathalu(కొలతలు)") {
-      //       stoneTypeText = "కొలతలు";
-      //       kolathaluSum += total;
-      //     } else if (stoneType === "Mandhalu(మందలు)") {
-      //       stoneTypeText = "మందలు";
-      //       mandhaluSum += total;
-      //     }
-      //     const driver = report.loadDetails?.driverName || "N/A";
-      //     const miningOwner = report.loadDetails?.miningOwner || "N/A";
-      //     const miningOwnerPhone =
-      //       report.loadDetails?.miningOwnerPhone || "N/A";
-      //     const factoryOwner = report.loadDetails?.factoryOwner || "N/A";
-      //     const factoryOwnerPhone = report.loadDetails?.factoryPhone || "N/A";
-
-      //     const card = document.createElement("div");
-      //     card.className = "history-card";
-      //     card.innerHTML = `
-      //           <div class="history-card-header">
-      //             <div class="history-card-header-div" >
-      //               <span id="vehicleNo" class="history-card-title">Vehicle No: ${vehicle}</span>
-
-      //               <span id="driverName">Stone Type: ${stoneTypeText}</span>
-      //               <span id="miningOwnerName">Mining Owner: ${miningOwner}</span>
-
-      //               <span id="factoryOwnername">FAC.Owner: ${factoryOwner}</span>
-
-      //     <span  class="history-card-date">Date: ${date}</span>
-      //     <span id="showDetails"
-      //    onclick="showDetails('${report.id}')" >
-      //     Info >>
-      //     </span>
-      //     </div>
-      //     </div>
-      //     <div   class="history-card-grid">
-      //       <div class="history-card-metric">
-      //         <span>Total Stones</span>
-      //         <span>${report.totalStones}</span>
-      //         </div>
-      //         <div class="history-card-metric">
-      //           <span>Total Area</span>
-      //           <span>${report.totalSqFt} SqFt</span>
-      //           </div>
-      //           <div class="history-card-metric">
-      //             <span>Squares/చదరాలు</span>
-      //             <span>${report.totalChadaralu}</span>
-      //             </div>
-      //             </div>
-      //             <div class="history-card-actions">
-      //               <button class="btn-success" onclick="downloadSpecificReport('${report.id}')">💾 Image</button>
-      //               <button class="btn-danger" onclick="deleteHistoryItem('${report.id}')">✕</button>
-      //               </div>
-      //               `;
-      //     container.appendChild(card);
-      //   });
-      //   console.log("mandhaluSum" + mandhaluSum);
-      //   console.log("kolathaluSum" + kolathaluSum);
-      //   document.getElementById("kolathaluSum").textContent = kolathaluSum;
-
-      //   document.getElementById("mandhaluSum").textContent = mandhaluSum;
-      // }
-
       function renderHistory() {
         const history = JSON.parse(localStorage.getItem("reportHistory")) || [];
 
@@ -810,7 +650,7 @@
           container.innerHTML = `
       <div class="no-history">
         No saved reports found.
-        Run a calculation and export or save it to store history locally.
+        Run a calculation and save it to store history locally.
       </div>
     `;
 
@@ -841,9 +681,12 @@
         const factoryGroups = {};
 
         history.forEach((report) => {
-          const factoryName =
-            report.loadDetails?.factoryOwner?.trim() || "No Factory";
+          const factoryOwnerName =
+            report.loadDetails?.factoryOwner?.trim() || "";
 
+          const factoryName = factoryOwnerName
+            ? `${factoryOwnerName}'s Factory`
+            : "No Factory Name";
           // Create factory group if it doesn't exist
           if (!factoryGroups[factoryName]) {
             factoryGroups[factoryName] = {
@@ -921,80 +764,60 @@
 
           <!-- FACTORY NAME -->
           <div class="factory-history-title">
-            🏭 ${factoryName}
+            🏭 ${factoryName} 
           </div>
 
           <!-- FACTORY SUMMARY -->
           <div class="factory-load-summary">
 
-            <!-- KOLATHALU -->
-            <div class="load-type">
+  <!-- KOLATHALU -->
+  <div class="load-type">
 
-              <span>కొలతలు</span>
+    <span>కొలతలు</span>
 
-              <div class="load-row">
-                <small>Loads</small>
-                <strong>
-                  ${group.kolathaluLoads}
-                </strong>
-              </div>
+    <strong>
+      Loads : ${group.kolathaluLoads}
+    </strong>
 
-              <div class="load-row">
-                <small>చదరాలు</small>
-                <strong>
-                  ${group.kolathaluChadaralu.toFixed(2)}
-                </strong>
-              </div>
+    <strong>
+      చదరాలు : ${group.kolathaluChadaralu.toFixed(2)}
+    </strong>
 
-            </div>
+  </div>
 
 
-            <!-- MANDHALU -->
-            <div class="load-type">
+  <!-- MANDHALU -->
+  <div class="load-type">
 
-              <span>మందలు</span>
+    <span>మందలు</span>
 
-              <div class="load-row">
-                <small>Loads</small>
-                <strong>
-                  ${group.mandhaluLoads}
-                </strong>
-              </div>
+    <strong>
+      Loads : ${group.mandhaluLoads}
+    </strong>
 
-              <div class="load-row">
-                <small>చదరాలు</small>
-                <strong>
-                  ${group.mandhaluChadaralu.toFixed(2)}
-                </strong>
-              </div>
+    <strong>
+      చదరాలు : ${group.mandhaluChadaralu.toFixed(2)}
+    </strong>
 
-            </div>
+  </div>
 
 
-            <!-- TOTAL -->
-            <div class="load-type total-load">
+  <!-- TOTAL -->
+  <div class="load-type total-load">
 
-              <span>మొత్తం</span>
+    <span>మొత్తం</span>
 
-              <div class="load-row">
-                <small>Loads</small>
-                <strong>
-                  ${totalLoads}
-                </strong>
-              </div>
+    <strong>
+      Loads : ${totalLoads}
+    </strong>
 
-              <div class="load-row">
-                <small>చదరాలు</small>
-                <strong>
-                  ${totalChadaralu.toFixed(2)}
-                </strong>
-              </div>
+    <strong>
+      చదరాలు : ${totalChadaralu.toFixed(2)}
+    </strong>
 
-            </div>
+  </div>
 
-          </div>
-
-        </div>
+</div>
       `;
 
           // =================================================
@@ -1033,6 +856,8 @@
 
             const miningOwner = report.loadDetails?.miningOwner || "N/A";
 
+            const factoryOwner =
+              report.loadDetails?.factoryOwner?.trim() || "No Factory Name";
             // =================================================
             // HISTORY CARD
             // =================================================
@@ -1063,19 +888,15 @@
               </span>
 
               <span>
-                FAC.Owner: ${factoryName}
+                FAC.Owner: ${factoryOwner}
               </span>
 
               <span class="history-card-date">
                 Date: ${date}
               </span>
 
-              <span
-                class="show-details"
-                onclick="showDetails('${report.id}')"
-              >
-                Info >>
-              </span>
+              
+             
 
             </div>
 
@@ -1135,6 +956,13 @@
             >
               ✕
             </button>
+             <span
+             style="font-weight:bold;border:1px solid black;border-radius:5px;padding:0px 5px;"
+                class="show-details"
+                onclick="showDetails('${report.id}')"
+              >
+                Info >>
+              </span>
 
           </div>
         `;
@@ -1160,23 +988,20 @@
 
         const overallElement = document.createElement("div");
 
-        overallElement.className = "overall-chadaralu-total";
+        overallElement.className = "stone-summary";
 
         overallElement.innerHTML = `
 
-    <div>
+        <div>
       <span>కొలతలు</span>
 
-      <small>Loads</small>
-
+     
       <strong>
-        ${overallKolathaluLoads}
+      Loads : ${overallKolathaluLoads}
       </strong>
 
-      <small>చదరాలు</small>
-
       <strong>
-        ${overallKolathaluChadaralu.toFixed(2)}
+       చదరాలు : ${overallKolathaluChadaralu.toFixed(2)}
       </strong>
     </div>
 
@@ -1184,16 +1009,14 @@
     <div>
       <span>మందలు</span>
 
-      <small>Loads</small>
 
       <strong>
-        ${overallMandhaluLoads}
+         Loads : ${overallMandhaluLoads}
       </strong>
 
-      <small>చదరాలు</small>
 
       <strong>
-        ${overallMandhaluChadaralu.toFixed(2)}
+        చదరాలు : ${overallMandhaluChadaralu.toFixed(2)}
       </strong>
     </div>
 
@@ -1201,22 +1024,20 @@
     <div>
       <span>మొత్తం</span>
 
-      <small>Loads</small>
 
       <strong>
-        ${overallLoads}
+       Loads : ${overallLoads}
       </strong>
 
-      <small>చదరాలు</small>
 
       <strong>
-        ${overallChadaralu.toFixed(2)}
+      చదరాలు : ${overallChadaralu.toFixed(2)}
       </strong>
     </div>
 
   `;
 
-        container.appendChild(overallElement);
+        container.prepend(overallElement);
 
         // =====================================================
         // EXISTING SQFT TOTALS
