@@ -38,7 +38,7 @@
       margin: 0;
       min-height: 100vh;
       font-family: "Segoe UI", sans-serif;
-      background: #84ccc6;
+      background: #7ed9e0;
       color: var(--text-dark);
 
       font-family: "Noto Sans Telugu", sans-serif;
@@ -161,7 +161,7 @@
 
     .history-card-date {
       color: var(--text-muted);
-      font-size: 16px;
+      font-size: 18px;
       color: black;
       font-weight: bold;
     }
@@ -309,7 +309,8 @@
     }
 
     /* MOBILE */
-    @media (max-width: 768px) {
+
+    @media (max-width: 750px) {
       .nav-links a {
         font-size: 17px;
       }
@@ -334,14 +335,14 @@
         width: auto;
       }
       .history-card-title {
-        font-size: 8.5px;
+        font-size: 14px;
       }
       .history-card-header {
         /* border: 1px solid black; */
         font-weight: 800;
+        font-size: 14px;
         /* text-align: center; */
         word-break: keep-all;
-        font-size: 9px;
         /* border: 1px solid black; */
       }
 
@@ -397,7 +398,7 @@
       }
       .history-card-date {
         color: black;
-        font-size: 8px;
+        font-size: 14px;
         color: black;
         font-weight: 800;
       }
@@ -468,6 +469,18 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
+    }
+    .view-loads-btn {
+      background: rgba(140, 233, 228, 0.925);
+      color: black;
+      border-radius: 8px;
+      text-align: center;
+      border: none;
+      font-size: 14px;
+      font-weight: bolder;
+      width: 100px;
+
+      font-family: "Noto Sans Telugu", sans-serif;
     }
 
     .load-type > span {
@@ -556,6 +569,149 @@
 
       .overall-chadaralu-total div {
         min-width: 90px;
+      }
+    }
+
+    /* total loads overview */
+    /* background: rgb(164, 209, 205); */
+    .factory-load-modal {
+      position: fixed;
+      inset: 0;
+
+      background: rgba(0, 0, 0, 0.5);
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      /* z-index: 9999; */
+
+      padding: 20px;
+
+      overflow-y: auto;
+    }
+
+    .factory-load-modal-box {
+      background: rgb(116, 211, 211);
+      /* background: rgba(71, 170, 164, 0.74); */
+      color: black;
+      width: 100%;
+      /* max-width: 600px; */
+      font-weight: bolder;
+
+      /* No fixed height */
+      height: 100%;
+
+      border-radius: 12px;
+
+      overflow: scroll;
+
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .factory-load-modal-title {
+      padding: 15px 20px;
+
+      font-size: 20px;
+      font-weight: bold;
+
+      text-align: center;
+
+      border-bottom: 1px solid #ddd;
+    }
+
+    .factory-load-modal-body {
+      /* Remove max-height and overflow */
+      padding: 10px 15px;
+    }
+
+    .factory-load-row {
+      display: grid;
+
+      grid-template-columns: 60px 1fr 120px;
+
+      padding: 10px;
+
+      border-bottom: 1px solid #eee;
+
+      text-align: center;
+    }
+
+    .factory-load-header {
+      font-weight: bold;
+      background: rgb(116, 211, 211);
+    }
+
+    .factory-load-modal-footer {
+      display: flex;
+
+      justify-content: flex-end;
+
+      gap: 10px;
+
+      padding: 12px 20px;
+
+      border-top: 1px solid #ddd;
+    }
+
+    .factory-load-modal-footer button {
+      padding: 8px 20px;
+
+      border: none;
+      border-radius: 6px;
+      background: #cdf1ed;
+      cursor: pointer;
+
+      font-size: 14px;
+    }
+
+    .factory-load-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .factory-load-row > div {
+      white-space: nowrap;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .factory-load-modal-body {
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    /* Modal scroll area */
+    .factory-load-modal-body {
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: #999 transparent;
+    }
+
+    /* Chrome, Edge, Safari */
+    .factory-load-modal-body::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .factory-load-modal-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .factory-load-modal-body::-webkit-scrollbar-thumb {
+      background: #999;
+      border-radius: 10px;
+    }
+
+    .factory-load-modal-body::-webkit-scrollbar-thumb:hover {
+      background: #666;
+    }
+    @media (max-width: 500px) {
+      .history-card-header,
+      .history-card-date {
+        font-size: 11px;
       }
     }
   </style>
@@ -734,67 +890,269 @@
 
           factorySection.className = "factory-history-section";
 
-          // FACTORY HEADER
           factorySection.innerHTML = `
-        <div class="factory-history-header">
+  <div class="factory-history-header">
 
-          <!-- FACTORY NAME -->
-          <div class="factory-history-title">
-            🏭 ${factoryName} 
-          </div>
+    <!-- FACTORY NAME -->
+    <div class="factory-history-title">
+      🏭 ${factoryName}
+    </div>
 
-          <!-- FACTORY SUMMARY -->
-          <div class="factory-load-summary">
+    <!-- FACTORY SUMMARY -->
+    <div class="factory-load-summary">
 
-  <!-- KOLATHALU -->
-  <div class="load-type">
+      <!-- KOLATHALU -->
+      <div class="load-type">
+        <span>కొలతలు</span>
 
-    <span>కొలతలు</span>
+        <strong>
+          Loads : ${group.kolathaluLoads}
+        </strong>
 
-    <strong>
-      Loads : ${group.kolathaluLoads}
-    </strong>
+        <strong>
+          చదరాలు : ${group.kolathaluChadaralu.toFixed(2)}
+        </strong>
+      </div>
 
-    <strong>
-      చదరాలు : ${group.kolathaluChadaralu.toFixed(2)}
-    </strong>
+      <!-- MANDHALU -->
+      <div class="load-type">
+        <span>మందలు</span>
+
+        <strong>
+          Loads : ${group.mandhaluLoads}
+        </strong>
+
+        <strong>
+          చదరాలు : ${group.mandhaluChadaralu.toFixed(2)}
+        </strong>
+      </div>
+
+      <!-- TOTAL -->
+      <div class="load-type total-load">
+        <span>మొత్తం</span>
+
+        <strong>
+          Loads : ${totalLoads}
+        </strong>
+
+        <strong>
+          చదరాలు : ${totalChadaralu.toFixed(2)}
+        </strong>
+        </div>
+        <button class="view-loads-btn">
+       📋 View Loads/మొత్తం లోడ్లు
+     </button>
+
+    </div>
 
   </div>
 
+  <!-- LOAD LIST -->
+  <div class="factory-loads-list" style="display: none;"></div>
+`;
 
-  <!-- MANDHALU -->
-  <div class="load-type">
+          const viewBtn = factorySection.querySelector(".view-loads-btn");
+          const loadsList = factorySection.querySelector(".factory-loads-list");
 
-    <span>మందలు</span>
+          viewBtn.addEventListener("click", function () {
+            const factoryReports = history.filter((report) => {
+              const savedFactory = report.loadDetails?.factoryOwner?.trim();
 
-    <strong>
-      Loads : ${group.mandhaluLoads}
-    </strong>
+              return `${savedFactory}'s Factory` === factoryName;
+            });
 
-    <strong>
-      చదరాలు : ${group.mandhaluChadaralu.toFixed(2)}
-    </strong>
+            // Sort by DateOfLoading
+            factoryReports.sort((a, b) => {
+              const [d1, m1, y1] = (a.loadDetails?.DateOfLoading || "").split(
+                "/",
+              );
+
+              const [d2, m2, y2] = (b.loadDetails?.DateOfLoading || "").split(
+                "/",
+              );
+
+              return new Date(y2, m2 - 1, d2) - new Date(y1, m1 - 1, d1);
+            });
+
+            let html = `
+    <div class="factory-load-row factory-load-header">
+      <div>S.No</div>
+      <div>Date</div>
+      <div>Total Stones</div>
+      <div>చదరాలు</div>
+    </div>
+  `;
+
+            factoryReports.forEach((report, index) => {
+              const date = report.loadDetails?.DateOfLoading || "";
+
+              const chadaralu = Number(report.totalChadaralu) || 0;
+              const stones = Number(report.totalStones) || 0;
+
+              html += `
+      <div class="factory-load-row">
+        <div>${index + 1}</div>
+        <div>${date}</div>
+        <div>${stones}</div>
+        <div>${chadaralu.toFixed(2)}</div>
+      </div>
+    `;
+            });
+
+            if (factoryReports.length === 0) {
+              html += `
+      <div class="no-loads">
+        No loads found
+      </div>
+    `;
+            }
+
+            //modal
+            const modal = document.createElement("div");
+
+            modal.className = "factory-load-modal";
+
+            modal.innerHTML = `
+  <div class="factory-load-modal-box">
+
+    <div class="factory-load-modal-title">
+      ${factoryName} Loads 
+    </div>
+
+    <div class="factory-load-modal-body">
+      ${html}
+    </div>
+
+    <div class="factory-load-modal-footer">
+      
+            <button class="modal-download-btn">
+             💾 Download
+            </button>
+
+      <button class="modal-close-btn">
+        Close
+      </button>
+
+     
+
+    </div>
 
   </div>
+`;
 
+            document.body.appendChild(modal);
+            const downloadBtn = modal.querySelector(".modal-download-btn");
 
-  <!-- TOTAL -->
-  <div class="load-type total-load">
+            downloadBtn.addEventListener("click", async () => {
+              const modalBody = modal.querySelector(".factory-load-modal-body");
 
-    <span>మొత్తం</span>
+              if (!modalBody) return;
 
-    <strong>
-      Loads : ${totalLoads}
-    </strong>
+              try {
+                // Create a temporary container
+                const report = document.createElement("div");
 
-    <strong>
-      చదరాలు : ${totalChadaralu.toFixed(2)}
-    </strong>
+                report.style.position = "absolute";
+                report.style.left = "-100000px";
+                report.style.top = "0";
+                report.style.color = "black";
+                report.style.fontWeight = "bolder";
+                report.style.width = "700px";
+                report.style.background = "rgb(116, 211, 211)";
+                report.style.padding = "20px";
+                report.style.boxSizing = "border-box";
 
-  </div>
+                // Factory name
+                const title = document.createElement("div");
+                title.textContent = factoryName + " Loads";
+                title.style.fontSize = "24px";
+                title.style.fontWeight = "bold";
+                title.style.textAlign = "center";
+                title.style.marginBottom = "15px";
 
-</div>
-      `;
+                report.appendChild(title);
+
+                // Clone ALL rows
+                const bodyClone = modalBody.cloneNode(true);
+
+                bodyClone.style.height = "auto";
+                bodyClone.style.maxHeight = "none";
+                bodyClone.style.overflow = "visible";
+                bodyClone.style.width = "100%";
+
+                report.appendChild(bodyClone);
+
+                document.body.appendChild(report);
+
+                // Allow browser to calculate complete height
+                await new Promise((resolve) => setTimeout(resolve, 200));
+
+                const canvas = await html2canvas(report, {
+                  scale: 3,
+                  backgroundColor: "#ffffff",
+                  width: report.scrollWidth,
+                  height: report.scrollHeight,
+                  windowWidth: report.scrollWidth,
+                  windowHeight: report.scrollHeight,
+                  scrollX: 0,
+                  scrollY: 0,
+                });
+
+                report.remove();
+
+                // Download
+                const link = document.createElement("a");
+
+                link.download = `${factoryName.replace(/[^a-z0-9]/gi, "_")}_loads.png`;
+
+                link.href = canvas.toDataURL("image/png");
+
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+              } catch (error) {
+                console.error("Download failed:", error);
+                alert("Unable to download report.");
+              }
+            });
+
+            // Close button
+            modal.querySelector(".modal-close-btn").onclick = () => {
+              modal.remove();
+            };
+
+            // OK button
+            modal.querySelector(".modal-ok-btn").onclick = () => {
+              modal.remove();
+            };
+
+            // Click outside modal to close
+            modal.addEventListener("click", (e) => {
+              if (e.target === modal) {
+                modal.remove();
+              }
+            });
+          });
+
+          // --------------
+
+          function parseDateOfLoading(dateString) {
+            if (!dateString) {
+              return new Date(0);
+            }
+
+            const parts = dateString.split("/");
+
+            if (parts.length !== 3) {
+              return new Date(0);
+            }
+
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10);
+            const year = parseInt(parts[2], 10);
+
+            return new Date(year, month - 1, day);
+          }
 
           // REPORTS CONTAINER
           const reportsContainer = document.createElement("div");
@@ -803,11 +1161,11 @@
 
           // DISPLAY REPORTS
           group.reports.forEach((report) => {
-            const date = new Date(report.date).toLocaleString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            });
+            // const date = new Date(report.date).toLocaleString("en-GB", {
+            //   day: "2-digit",
+            //   month: "2-digit",
+            //   year: "numeric",
+            // });
 
             const vehicle = report.loadDetails?.vehicleNo || "N/A";
 
@@ -822,6 +1180,9 @@
               stoneTypeText = "మందలు";
             }
 
+            const date = report.loadDetails?.DateOfLoading || "";
+
+            console.log(date);
             const driver = report.loadDetails?.driverName || "N/A";
 
             const miningOwner = report.loadDetails?.miningOwner || "N/A";
