@@ -711,9 +711,7 @@
           <span class="final">= 0</span>
           <button class="delete-btn" onclick="deleteRow(event)">✕</button>
         </div>
-
-
-<div class="row">
+        <div class="row">
           <input
             type="number"
             step="0.5"
@@ -736,11 +734,7 @@
           <input type="number" step="0.5" class="num3" placeholder="No.of" />
           <span class="final">= 0</span>
           <button class="delete-btn" onclick="deleteRow(event)">✕</button>
-</div>
-        
-
-
-        
+        </div>
         <div class="row">
           <input
             type="number"
@@ -795,8 +789,6 @@
           <span class="final">= 0</span>
           <button class="delete-btn" onclick="deleteRow(event)">✕</button>
         </div>
-
-        
         <div class="row">
           <input
             value="3"
@@ -911,15 +903,14 @@
           <span class="final">= 0</span>
           <button class="delete-btn" onclick="deleteRow(event)">✕</button>
         </div>
-
-<div class="row">
+        <div class="row">
           <input
-            type="number"
-            step="0.5"
-            min="1"
-            class="num1"
-            placeholder="Size"
             value="4"
+            type="number"
+            step="0.5"
+            min="1"
+            class="num1"
+            placeholder="Size"
           />
           <span class="mul1">×</span>
           <input
@@ -932,11 +923,16 @@
           <span class="result">= 0</span>
           <span class="spacer"></span>
           <span class="mul2">×</span>
-          <input type="number" step="0.5" class="num3" placeholder="No.of" />
+          <input
+            id="stones"
+            type="number"
+            step="0.5"
+            class="num3"
+            placeholder="No.of"
+          />
           <span class="final">= 0</span>
           <button class="delete-btn" onclick="deleteRow(event)">✕</button>
-</div>
-        
+        </div>
         <div class="row">
           <input
             value="4"
@@ -1715,32 +1711,77 @@
  /* ── Live calculations ── */
       document.addEventListener("input", updateCalculations);
 
-      function updateCalculations() {
-        let totalstones = 0;
+      // function updateCalculations() {
+      //   let totalstones = 0;
 
-        document.querySelectorAll(".row").forEach((row) => {
-          const n1 = parseFloat(row.querySelector(".num1").value) || 0;
-          const n2 = parseFloat(row.querySelector(".num2").value) || 0;
-          const n3 = parseFloat(row.querySelector(".num3").value) || 0;
-          const n4 = parseFloat(row.querySelector(".num3").value) || 0;
+      //   document.querySelectorAll(".row").forEach((row) => {
+      //     const n1 = parseFloat(row.querySelector(".num1").value) || 0;
+      //     const n2 = parseFloat(row.querySelector(".num2").value) || 0;
+      //     const n3 = parseFloat(row.querySelector(".num3").value) || 0;
+      //     const n4 = parseFloat(row.querySelector(".num3").value) || 0;
 
-          const res1 = Math.floor(n1 * n2);
-
-          const final = Math.floor(res1 * n3);
-
-          totalstones += n4;
-
-          row.querySelector(".result").innerText = "= " + res1;
-
-          row.querySelector(".final").innerText = "= " + final;
-        });
-
-        document.getElementById("total-stones").innerHTML = totalstones;
-      }
       
-      let entryCounter = 0;
+          // const res1 = Math.floor(n1 * n2);
+          // const final = Math.floor(res1 * n3);
+          // totalstones += n4;
+          // row.querySelector(".result").innerText = "= " + res1;
+          // row.querySelector(".final").innerText = "= " + final;
 
-//TRACK USER ENTRY ORDER
+
+
+      //   });
+
+      //   document.getElementById("total-stones").innerHTML = totalstones;
+       
+      // }
+      
+
+function updateCalculations() {
+  let total = 0;
+  let totalstones = 0;
+
+
+  document.querySelectorAll(".row").forEach((row) => {
+    const num3Value = row.querySelector(".num3").value.trim();
+
+    // Only calculate rows where num3 is entered
+    // if (num3Value === "") {
+    //   return;
+    // }
+
+    const n1 = parseFloat(row.querySelector(".num1").value) || 0;
+    const n2 = parseFloat(row.querySelector(".num2").value) || 0;
+    const n3 = parseFloat(num3Value) || 0;
+const n4 = parseFloat(row.querySelector(".num3").value) || 0;
+
+    total += Math.floor(Math.floor(n1 * n2) * n3);
+
+ const res1 = Math.floor(n1 * n2);
+          const final = Math.floor(res1 * n3);
+          totalstones += n4;
+          row.querySelector(".result").innerText = "= " + res1;
+          row.querySelector(".final").innerText = "= " + final;
+
+
+
+    totalstones += n4;
+
+  });
+
+  document.getElementById("total-stones").innerHTML = totalstones;
+       
+  const totalEle = document.getElementById("total");
+  const totalChadaraluEle = document.getElementById("total-chadaralu");
+
+  const totalChadaraluValue = (total / 100).toFixed(2);
+
+  totalChadaraluEle.innerHTML = totalChadaraluValue;
+  totalEle.innerText = total;
+}
+
+      
+      //TRACK USER ENTRY ORDER
+      let entryCounter = 0;
 
       document.addEventListener("input", function (e) {
         if (e.target.classList.contains("num3")) {
@@ -1815,6 +1856,8 @@
           totalEle.style.animation = "pulse 0.5s ease-out";
         }, 10);
 
+
+        //to get analytics of this website
          gtag('event', 'stone_calculation', {
         calculator: 'stone_area_calculator'
     });
@@ -1869,7 +1912,7 @@ function saveToHistory() {
 
 
   
-});
+   });
     return;
   }
 
