@@ -714,6 +714,16 @@
         font-size: 11px;
       }
     }
+    .history-toggle-btn {
+      /* color: #23ccbb; */
+      background: #28c9b9;
+      border: 2px solid black;
+      border-radius: 5px;
+      padding: 2px 7px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px;
+    }
   </style>
   <body>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -896,6 +906,9 @@
     <!-- FACTORY NAME -->
     <div class="factory-history-title">
       🏭 ${factoryName}
+       <button class="history-toggle-btn" type="button">
+        ▼
+    </button>
     </div>
 
     <!-- FACTORY SUMMARY -->
@@ -940,13 +953,18 @@
         </strong>
         </div>
         <button class="view-loads-btn">
-       📋 View Loads/మొత్తం లోడ్లు
-     </button>
+           📋 View Loads/మొత్తం లోడ్లు
+        </button>
 
+
+        
     </div>
+
+    
 
   </div>
 
+  
   <!-- LOAD LIST -->
   <div class="factory-loads-list" style="display: none;"></div>
 `;
@@ -1161,12 +1179,6 @@
 
           // DISPLAY REPORTS
           group.reports.forEach((report) => {
-            // const date = new Date(report.date).toLocaleString("en-GB", {
-            //   day: "2-digit",
-            //   month: "2-digit",
-            //   year: "numeric",
-            // });
-
             const vehicle = report.loadDetails?.vehicleNo || "N/A";
 
             const stoneType = report.loadDetails?.StoneType || "N/A";
@@ -1304,6 +1316,22 @@
 
           // Add factory section to main container
           container.appendChild(factorySection);
+
+          const toggleBtn = factorySection.querySelector(".history-toggle-btn");
+
+          toggleBtn.addEventListener("click", () => {
+            const isHidden = reportsContainer.style.display === "none";
+
+            if (isHidden) {
+              reportsContainer.style.display = "block";
+              toggleBtn.textContent = "▲";
+            } else {
+              reportsContainer.style.display = "none";
+              toggleBtn.textContent = "▼";
+            }
+          });
+
+          factorySection.appendChild(reportsContainer);
         });
 
         // =====================================================
