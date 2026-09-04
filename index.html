@@ -1706,8 +1706,8 @@
 
 
       document.getElementById("stones").addEventListener("input", function () {
-  this.value = this.value.replace(/[^0-9.]/g, "");
-});
+      this.value = this.value.replace(/[^0-9.]/g, "");
+  });
  /* ── Live calculations ── */
       document.addEventListener("input", updateCalculations);
 
@@ -1764,7 +1764,7 @@ const n4 = parseFloat(row.querySelector(".num3").value) || 0;
 
 
 
-    totalstones += n4;
+    // totalstones += n4;
 
   });
 
