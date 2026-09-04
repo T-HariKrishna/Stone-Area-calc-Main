@@ -705,6 +705,16 @@
       border-radius: 10px;
     }
 
+    .factory-modal-total {
+      /* border: 1px solid black; */
+      text-align: end;
+      margin-top: 10px;
+      font-size: 20px;
+    }
+    .factory-modal-total > strong {
+      margin-right: 60px;
+      /* border: 1px solid black; */
+    }
     .factory-load-modal-body::-webkit-scrollbar-thumb:hover {
       background: #666;
     }
@@ -713,6 +723,12 @@
       .history-card-date {
         font-size: 11px;
       }
+    }
+    .view-kolathalu-btn,
+    .view-mandhalu-btn {
+      background: rgba(140, 233, 228, 0.925);
+      border: none;
+      border-radius: 6px;
     }
     .history-toggle-btn {
       /* color: #23ccbb; */
@@ -913,73 +929,98 @@
 
     <!-- FACTORY SUMMARY -->
     <div class="factory-load-summary">
+<!-- KOLATHALU -->
+<button class="view-kolathalu-btn">
+<div class="load-type">
+  <span>కొలతలు</span>
 
-      <!-- KOLATHALU -->
-      <div class="load-type">
-        <span>కొలతలు</span>
+  <strong>
+    Loads : ${group.kolathaluLoads}
+  </strong>
 
-        <strong>
-          Loads : ${group.kolathaluLoads}
-        </strong>
-
-        <strong>
-          చదరాలు : ${group.kolathaluChadaralu.toFixed(2)}
-        </strong>
-      </div>
-
-      <!-- MANDHALU -->
-      <div class="load-type">
-        <span>మందలు</span>
-
-        <strong>
-          Loads : ${group.mandhaluLoads}
-        </strong>
-
-        <strong>
-          చదరాలు : ${group.mandhaluChadaralu.toFixed(2)}
-        </strong>
-      </div>
-
-      <!-- TOTAL -->
-      <div class="load-type total-load">
-        <span>మొత్తం</span>
-
-        <strong>
-          Loads : ${totalLoads}
-        </strong>
-
-        <strong>
-          చదరాలు : ${totalChadaralu.toFixed(2)}
-        </strong>
-        </div>
-        <button class="view-loads-btn">
-           📋 View Loads/మొత్తం లోడ్లు
-        </button>
+  <strong>
+    చదరాలు : ${group.kolathaluChadaralu.toFixed(2)}
+  </strong>
+  </div>
+  </button>
 
 
-        
+<!-- MANDHALU -->
+<button class="view-mandhalu-btn">
+<div class="load-type ">
+  <span>మందలు</span>
+
+  <strong>
+    Loads : ${group.mandhaluLoads}
+  </strong>
+
+  <strong>
+    చదరాలు : ${group.mandhaluChadaralu.toFixed(2)}
+  </strong>
+
+    
     </div>
+    </button>
 
+
+<!-- TOTAL -->
+<button class="view-loads-btn">
+<div class="load-type total-load">
+  <span>మొత్తం</span>
+
+  <strong>
+    Loads : ${totalLoads}
+  </strong>
+
+  <strong>
+    చదరాలు : ${totalChadaralu.toFixed(2)}
+  </strong>
+
+    </div>
+    </button>
     
 
   </div>
 
   
-  <!-- LOAD LIST -->
+
+
+  
+
+<!--   -----------------------------------------------------  -->
+  
+  <!-- total LOAD LIST -->
   <div class="factory-loads-list" style="display: none;"></div>
 `;
 
-          const viewBtn = factorySection.querySelector(".view-loads-btn");
-          const loadsList = factorySection.querySelector(".factory-loads-list");
+          // ======================================================
+          // COMMON MODAL FUNCTION
+          // ======================================================
 
-          viewBtn.addEventListener("click", function () {
-            const factoryReports = history.filter((report) => {
+          function showFactoryLoadsModal(factoryName, stoneType, modalTitle) {
+            // Get factory reports
+            let factoryReports = history.filter((report) => {
               const savedFactory = report.loadDetails?.factoryOwner?.trim();
 
-              return `${savedFactory}'s Factory` === factoryName;
+              const savedStoneType = report.loadDetails?.StoneType?.trim();
+
+              const factoryMatch = `${savedFactory}'s Factory` === factoryName;
+
+              // TOTAL = don't filter stone type
+              if (stoneType === "TOTAL") {
+                return factoryMatch;
+              }
+              console.log(savedStoneType);
+              console.log(stoneType);
+
+              // Stone type filter
+              return factoryMatch && savedStoneType === stoneType;
             });
 
-            // Sort by DateOfLoading
+            // ======================================================
+            // SORT BY DATE
+            // ======================================================
+
             factoryReports.sort((a, b) => {
               const [d1, m1, y1] = (a.loadDetails?.DateOfLoading || "").split(
                 "/",
@@ -992,12 +1033,31 @@
               return new Date(y2, m2 - 1, d2) - new Date(y1, m1 - 1, d1);
             });
 
+            // ======================================================
+            // CALCULATE TOTAL
+            // ======================================================
+
+            let totalChadaralu = 0;
+
+            factoryReports.forEach((report) => {
+              totalChadaralu += Number(report.totalChadaralu) || 0;
+            });
+
+            // ======================================================
+            // CREATE TABLE
+            // ======================================================
+
             let html = `
     <div class="factory-load-row factory-load-header">
+
       <div>S.No</div>
+
       <div>Date</div>
+
       <div>Total Stones</div>
+
       <div>చదరాలు</div>
+
     </div>
   `;
 
@@ -1005,14 +1065,20 @@
               const date = report.loadDetails?.DateOfLoading || "";
 
               const chadaralu = Number(report.totalChadaralu) || 0;
+
               const stones = Number(report.totalStones) || 0;
 
               html += `
       <div class="factory-load-row">
+
         <div>${index + 1}</div>
+
         <div>${date}</div>
+
         <div>${stones}</div>
+
         <div>${chadaralu.toFixed(2)}</div>
+
       </div>
     `;
             });
@@ -1025,64 +1091,100 @@
     `;
             }
 
-            //modal
+            // ======================================================
+            // MODAL
+            // ======================================================
+
             const modal = document.createElement("div");
 
             modal.className = "factory-load-modal";
 
             modal.innerHTML = `
-  <div class="factory-load-modal-box">
 
-    <div class="factory-load-modal-title">
-      ${factoryName} Loads 
+    <div class="factory-load-modal-box">
+
+      <!-- TITLE -->
+      <div class="factory-load-modal-title">
+        ${factoryName} - ${modalTitle}
+      </div>
+
+
+      <!-- LOAD LIST -->
+      <div class="factory-load-modal-body">
+
+        ${html}
+
+      </div>
+
+
+      <!-- TOTAL -->
+      <div class="factory-modal-total">
+
+        <span>
+          మొత్తం  చదరాలు =
+        </span>
+
+        <strong>
+          ${totalChadaralu.toFixed(2)}
+        </strong>
+
+      </div>
+
+
+      <!-- FOOTER -->
+      <div class="factory-load-modal-footer">
+
+        <button class="modal-download-btn">
+          💾 Download
+        </button>
+
+        <button class="modal-close-btn">
+          Close
+        </button>
+
+      </div>
+
     </div>
 
-    <div class="factory-load-modal-body">
-      ${html}
-    </div>
-
-    <div class="factory-load-modal-footer">
-      
-            <button class="modal-download-btn">
-             💾 Download
-            </button>
-
-      <button class="modal-close-btn">
-        Close
-      </button>
-
-     
-
-    </div>
-
-  </div>
-`;
+  `;
 
             document.body.appendChild(modal);
+
+            // ======================================================
+            // DOWNLOAD
+            // ======================================================
+
             const downloadBtn = modal.querySelector(".modal-download-btn");
 
             downloadBtn.addEventListener("click", async () => {
               const modalBody = modal.querySelector(".factory-load-modal-body");
 
-              if (!modalBody) return;
+              const modalTotal = modal.querySelector(".factory-modal-total");
 
               try {
-                // Create a temporary container
+                // Temporary report
                 const report = document.createElement("div");
 
                 report.style.position = "absolute";
                 report.style.left = "-100000px";
                 report.style.top = "0";
-                report.style.color = "black";
-                report.style.fontWeight = "bolder";
                 report.style.width = "700px";
-                report.style.background = "rgb(116, 211, 211)";
                 report.style.padding = "20px";
                 report.style.boxSizing = "border-box";
 
-                // Factory name
+                // Keep your modal background
+                report.style.background = "rgb(116, 211, 211)";
+
+                report.style.color = "black";
+
+                // ==================================================
+                // TITLE
+                // ==================================================
+
                 const title = document.createElement("div");
-                title.textContent = factoryName + " Loads";
+
+                title.textContent = `${factoryName} - ${modalTitle}`;
+
                 title.style.fontSize = "24px";
                 title.style.fontWeight = "bold";
                 title.style.textAlign = "center";
@@ -1090,7 +1192,10 @@
 
                 report.appendChild(title);
 
-                // Clone ALL rows
+                // ==================================================
+                // ALL ROWS
+                // ==================================================
+
                 const bodyClone = modalBody.cloneNode(true);
 
                 bodyClone.style.height = "auto";
@@ -1100,56 +1205,140 @@
 
                 report.appendChild(bodyClone);
 
+                // ==================================================
+                // TOTAL
+                // ==================================================
+
+                const totalClone = modalTotal.cloneNode(true);
+
+                // const totalClone = modalTotal.cloneNode(true);
+
+                totalClone.style.display = "grid";
+                totalClone.style.gridTemplateColumns = "1fr auto";
+                totalClone.style.alignItems = "center";
+                totalClone.style.width = "100%";
+                totalClone.style.boxSizing = "border-box";
+                totalClone.style.padding = "12px 10px";
+                totalClone.style.marginTop = "15px";
+
+                const totalValue = totalClone.querySelector("strong");
+
+                if (totalValue) {
+                  totalValue.style.textAlign = "right";
+                  totalValue.style.marginRight = "20px";
+                }
+
+                report.appendChild(totalClone);
+                report.appendChild(totalClone);
+
                 document.body.appendChild(report);
 
-                // Allow browser to calculate complete height
+                // Wait for layout
                 await new Promise((resolve) => setTimeout(resolve, 200));
+
+                // ==================================================
+                // SCREENSHOT
+                // ==================================================
 
                 const canvas = await html2canvas(report, {
                   scale: 3,
-                  backgroundColor: "#ffffff",
+
+                  useCORS: true,
+
+                  backgroundColor: null,
+
                   width: report.scrollWidth,
+
                   height: report.scrollHeight,
+
                   windowWidth: report.scrollWidth,
+
                   windowHeight: report.scrollHeight,
+
                   scrollX: 0,
+
                   scrollY: 0,
                 });
 
                 report.remove();
 
-                // Download
+                // ==================================================
+                // DOWNLOAD
+                // ==================================================
+
                 const link = document.createElement("a");
 
-                link.download = `${factoryName.replace(/[^a-z0-9]/gi, "_")}_loads.png`;
+                const safeFactoryName = factoryName.replace(
+                  /[<>:"/\\|?*]/g,
+                  "_",
+                );
+                const safeModalTitle = modalTitle.replace(/[<>:"/\\|?*]/g, "_");
 
+                link.download = `${safeFactoryName}_${safeModalTitle}.png`;
                 link.href = canvas.toDataURL("image/png");
 
                 document.body.appendChild(link);
+
                 link.click();
+
                 link.remove();
               } catch (error) {
                 console.error("Download failed:", error);
+
                 alert("Unable to download report.");
               }
             });
 
-            // Close button
+            // ======================================================
+            // CLOSE
+            // ======================================================
+
             modal.querySelector(".modal-close-btn").onclick = () => {
               modal.remove();
             };
 
-            // OK button
-            modal.querySelector(".modal-ok-btn").onclick = () => {
-              modal.remove();
-            };
+            // ======================================================
+            // CLICK OUTSIDE
+            // ======================================================
 
-            // Click outside modal to close
             modal.addEventListener("click", (e) => {
               if (e.target === modal) {
                 modal.remove();
               }
             });
+          }
+
+          // ======================================================
+          // TOTAL LOADS
+          // ======================================================
+
+          const viewTotalBtn = factorySection.querySelector(".view-loads-btn");
+
+          viewTotalBtn.addEventListener("click", () => {
+            showFactoryLoadsModal(factoryName, "TOTAL", "మొత్తం లోడ్లు");
+          });
+
+          // ======================================================
+          // KOLATHALU
+          // ======================================================
+
+          const viewKolathaluBtn = factorySection.querySelector(
+            ".view-kolathalu-btn",
+          );
+
+          viewKolathaluBtn.addEventListener("click", () => {
+            showFactoryLoadsModal(factoryName, "Kolathalu(కొలతలు)", "కొలతలు");
+          });
+
+          // ======================================================
+          // MANDHALU
+          // ======================================================
+
+          const viewMandhaluBtn =
+            factorySection.querySelector(".view-mandhalu-btn");
+
+          viewMandhaluBtn.addEventListener("click", () => {
+            showFactoryLoadsModal(factoryName, "Mandhalu(మందలు)", "మందలు");
           });
 
           // --------------
