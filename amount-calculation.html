@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Amount Calculation</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: "Noto Sans Telugu", Arial, sans-serif;
+        background: #7ed9e0;
+      }
+
+      .calculation-container {
+        max-width: 650px;
+        margin: 20px auto;
+        background: #c7e9e6;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        /* position:sticky; */
+        top: 0;
+        /* z-index:1000; */
+        margin-bottom: 25px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 20px;
+      }
+
+      .nav-links a {
+        background: #78dbdb;
+        text-decoration: none;
+        color: black;
+        font-size: 22px;
+        font-weight: 600;
+
+        padding: 10px 9px;
+        border-radius: 10px;
+
+        /* border: 1px solid black; */
+        transition: all 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        background: #2563eb;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: bold;
+      }
+
+      input {
+        width: 100%;
+        padding: 11px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #555;
+      }
+
+      .calculation-section {
+        margin-top: 25px;
+        padding: 18px;
+        background: #f7f7f7;
+        border-radius: 8px;
+      }
+
+      .calculation-section h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+
+      .calculation-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 8px 0;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .calculation-row:last-child {
+        border-bottom: none;
+      }
+
+      .calculation-row strong {
+        text-align: right;
+      }
+
+      .final-box {
+        margin-top: 20px;
+        padding: 18px;
+        border-radius: 8px;
+        text-align: center;
+        background: #eeeeee;
+      }
+
+      .final-box h3 {
+        margin: 0 0 10px;
+      }
+
+      #finalAmount {
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      #balanceMessage {
+        margin-top: 10px;
+        font-size: 17px;
+        font-weight: bold;
+      }
+
+      .positive {
+        color: green;
+      }
+
+      .negative {
+        color: red;
+      }
+
+      .settled {
+        color: #555;
+      }
+      #downloadReceipt {
+        display: block;
+        padding: 8px 16px;
+        margin: 20px auto;
+        font-weight: bolder;
+        color: black;
+        border-radius: 4px;
+        border: 1px solid rgb(10, 129, 119);
+      }
+
+      @media (max-width: 500px) {
+        body {
+          padding: 10px;
+        }
+
+        .calculation-container {
+          padding: 18px;
+        }
+
+        .calculation-row {
+          flex-direction: column;
+          gap: 3px;
+        }
+
+        .calculation-row strong {
+          text-align: left;
+        }
+
+        .navbar {
+          /* padding:15px 20px; */
+          flex-direction: column;
+          gap: 15px;
+        }
+        .nav-links {
+          width: 100%;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+
+        .nav-links a {
+          font-size: 17px;
+        }
+        .nav-links a:hover {
+          background: #2563eb;
+          color: white;
+          transform: translateY(-2px);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="calculation-container">
+      <h2>💰 Amount Calculation</h2>
+
+      <nav class="navbar">
+        <div class="nav-links">
+          <a href="index.html">Calculator</a>
+          <a href="load-details.html" class="active">Load Details</a>
+          <a href="history.html">History</a>
+          <a href="amount-calculation.html">₹ </a>
+        </div>
+      </nav>
+      <!-- INPUTS -->
+      <div class="form-group">
+        <label>ఫ్యాక్టరీ ఓనర్ పేరు / Factory Owner Name</label>
+        <input type="text" id="factoryName" placeholder="Enter factory name" />
+      </div>
+
+      <div class="form-group">
+        <label>మైనింగ్ ఓనర్ పేరు / Mining Owner Name</label>
+        <input
+          type="text"
+          id="miningOwnerName"
+          placeholder="Enter mining owner name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label
+          >ఫ్యాక్టరీ ద్వారా ఇవ్వబడిన మొత్తం (₹)/Amount Given by Factory
+          (₹)</label
+        >
+        <input
+          type="number"
+          id="amountGiven"
+          min="0"
+          step="0.01"
+          placeholder="Enter amount given by factory"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>మొత్తం చదరపు అడుగులు/Total square feet</label>
+        <input
+          type="number"
+          id="totalChadarapuAdugulu"
+          min="0"
+          step="0.01"
+          placeholder="Enter total chadaralu"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>చదరపు యూనిట్ ధర (₹)/Chadaram Per Unit Cost (₹)</label>
+
+        <input
+          type="number"
+          id="unitCost"
+          min="0"
+          step="0.01"
+          placeholder="Enter cost per chadaram"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>లోడ్ల సంఖ్య/No. of Loads</label>
+        <input
+          type="number"
+          id="numberOfLoads"
+          min="0"
+          step="1"
+          placeholder="Enter number of loads"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>ఒక లోడ్‌కు వృధా (అడుగులు)/Wastage Per Load (Feet)</label>
+        <input
+          type="number"
+          id="wastagePerLoad"
+          min="0"
+          step="0.01"
+          placeholder="Enter wastage feet per load"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>ఒక లోడ్‌కు రాయల్టీ (₹)/Royalty Per Load (₹)</label>
+        <input
+          type="number"
+          id="royaltyPerLoad"
+          min="0"
+          step="0.01"
+          placeholder="Enter royalty per load"
+        />
+      </div>
+
+      <!-- CALCULATIONS -->
+
+      <div class="calculation-section">
+        <h3>లెక్కల వివరాలు/Calculation Details</h3>
+
+        <div class="calculation-row">
+          <span>మొత్తం వృధా అడుగులు/Total Wastage Feet</span>
+          <strong id="totalWastageFeet">0</strong>
+        </div>
+
+        <!-- <div class="calculation-row">
+          <span>Wastage Chadaralu</span>
+          <strong id="wastageChadaralu">0.00</strong>
+        </div> -->
+
+        <div class="calculation-row">
+          <span>Adjusted Chadarapu adugulu</span>
+          <strong id="adjustedChadarapuAdugulu">0.00</strong>
+        </div>
+        <div class="calculation-row">
+          <span>Adjusted Chadaralu</span>
+          <strong id="adjustedChadaralu">0.00</strong>
+        </div>
+        <div class="calculation-row">
+          <span>Amount Given by Factory</span>
+          <strong id="displayAmountGiven">₹0.00</strong>
+        </div>
+
+        <div class="calculation-row">
+          <span>Stone Amount</span>
+          <strong id="stoneAmount">₹0.00</strong>
+        </div>
+
+        <div class="calculation-row">
+          <span>Total Royalty</span>
+          <strong id="totalRoyalty">₹0.00</strong>
+        </div>
+      </div>
+
+      <!-- FINAL -->
+
+      <div class="final-box">
+        <h3>Final Amount</h3>
+
+        <div id="finalAmount">₹0.00</div>
+
+        <div id="balanceMessage">No Balance</div>
+      </div>
+      <button type="button" id="downloadReceipt">💾 Download Receipt</button>
+      <div
+        id="receipt"
+        style="
+          width: 800px;
+          height: 1200px;
+          padding: 50px;
+          background: white;
+          color: black;
+          font-family: &quot;Noto Sans Telugu&quot;, Arial, sans-serif;
+          position: absolute;
+          left: 0;
+          top: 0;
+          display: none;
+        "
+      >
+        <h2 style="text-align: center; margin: 0 0 20px">
+          Stone Amount Calculation Receipt
+        </h2>
+
+        <div>
+          <strong>Factory Name:</strong> <span id="rFactoryName"></span>
+        </div>
+        <div>
+          <strong>Mining Owner:</strong> <span id="rMiningOwner"></span>
+        </div>
+
+        <hr />
+
+        <div><strong>No. of Loads:</strong> <span id="rLoads"></span></div>
+        <div>
+          <strong>Total Chadaralu:</strong> <span id="rTotalChadaralu"></span>
+        </div>
+        <div>
+          <strong>Total Wastage Feet:</strong> <span id="rWastageFeet"></span>
+        </div>
+        <div>
+          <strong>Final Total Chadaralu:</strong>
+          <span id="rAdjustedChadaralu"></span>
+        </div>
+        <div>
+          <strong>Chadaram Unit Cost:</strong> <span id="rUnitCost"></span>
+        </div>
+
+        <hr />
+
+        <div>
+          <strong>Amount Given by Factory:</strong>
+          <span id="rAmountGiven"></span>
+        </div>
+        <div>
+          <strong>Stone Amount:</strong> <span id="rStoneAmount"></span>
+        </div>
+        <div><strong>Total Royalty:</strong> <span id="rRoyalty"></span></div>
+
+        <hr />
+
+        <h2>
+          Final Amount:
+          <span id="rFinalAmount"></span>
+        </h2>
+
+        <h3 id="rBalanceMessage" style="text-align: center"></h3>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+      function getNumber(id) {
+        return parseFloat(document.getElementById(id).value) || 0;
+      }
+
+      function calculateAmount() {
+        // INPUTS
+
+        const amountGiven = getNumber("amountGiven");
+
+        const totalChadarapuAdugulu = getNumber("totalChadarapuAdugulu");
+
+        const unitCost = getNumber("unitCost");
+
+        const numberOfLoads = getNumber("numberOfLoads");
+
+        const wastagePerLoad = getNumber("wastagePerLoad");
+
+        const royaltyPerLoad = getNumber("royaltyPerLoad");
+
+        // --------------------------------
+        // 1. TOTAL WASTAGE FEET
+        // --------------------------------
+
+        const totalWastageFeet = numberOfLoads * wastagePerLoad;
+
+        // --------------------------------
+        // 2. WASTAGE CHADARALU
+        // 800 FEET / 100 = 8
+        // --------------------------------
+
+        const wastageChadaralu = totalWastageFeet / 100;
+
+        // --------------------------------
+        // 3. ADJUSTED CHADARALU
+        // --------------------------------
+        const totalChadaraluu = totalChadarapuAdugulu / 100;
+
+        const adjustedChadaralu = totalChadaraluu - wastageChadaralu;
+
+        // --------------------------------
+        // 4. STONE AMOUNT
+        // --------------------------------
+
+        const stoneAmount = adjustedChadaralu * unitCost;
+
+        // --------------------------------
+        // 5. TOTAL ROYALTY
+        // --------------------------------
+
+        const totalRoyalty = numberOfLoads * royaltyPerLoad;
+
+        // --------------------------------
+        // 6. FINAL AMOUNT
+        //
+        // Stone Amount
+        // + Mining Owner Royalty
+        // - Amount Given by Factory
+        // --------------------------------
+
+        const finalAmount = stoneAmount + totalRoyalty - amountGiven;
+
+        // --------------------------------
+        // DISPLAY
+        // --------------------------------
+
+        document.getElementById("totalWastageFeet").innerText =
+          totalWastageFeet.toFixed(2);
+
+        // document.getElementById("wastageChadaralu").innerText =
+        //   wastageChadaralu.toFixed(2);
+
+        document.getElementById("adjustedChadarapuAdugulu").innerText =
+          totalChadarapuAdugulu.toFixed(2);
+
+        document.getElementById("adjustedChadaralu").innerText =
+          adjustedChadaralu.toFixed(2);
+
+        document.getElementById("displayAmountGiven").innerText =
+          formatRupees(amountGiven);
+
+        document.getElementById("stoneAmount").innerText =
+          formatRupees(stoneAmount);
+
+        document.getElementById("totalRoyalty").innerText =
+          formatRupees(totalRoyalty);
+
+        document.getElementById("finalAmount").innerText = formatRupees(
+          Math.abs(finalAmount),
+        );
+        // --------------------------------
+        // BALANCE MESSAGE
+        // --------------------------------
+
+        const balanceMessage = document.getElementById("balanceMessage");
+
+        balanceMessage.className = "";
+
+        if (finalAmount > 0) {
+          balanceMessage.innerText =
+            "🟢 ఫ్యాక్టరీ యజమాని మైనింగ్ యజమానికి చెల్లించాలి./Factory Owner has to pay Mining Owner. ₹" +
+            formatRupees(finalAmount);
+
+          balanceMessage.classList.add("positive");
+        } else if (finalAmount < 0) {
+          balanceMessage.innerText =
+            "🔴 గని యజమాని ఫ్యాక్టరీ యజమానికి చెల్లించాలి./Mining Owner has to pay Factory Owner ₹" +
+            formatRupees(Math.abs(finalAmount));
+
+          balanceMessage.classList.add("negative");
+        } else {
+          balanceMessage.innerText = "⚪ Account Settled — No Balance";
+
+          balanceMessage.classList.add("settled");
+        }
+      }
+
+      //arrow navigation
+
+      //   const inputs = document.querySelectorAll("input");
+
+      //   inputs.forEach((input, index) => {
+      //     input.addEventListener("keydown", (e) => {
+      //       if (e.key === "ArrowRight") {
+      //         e.preventDefault();
+
+      //         // Last → First
+      //         const nextIndex = (index + 1) % inputs.length;
+
+      //         inputs[nextIndex].focus();
+      //       }
+
+      //       if (e.key === "ArrowLeft") {
+      //         e.preventDefault();
+
+      //         // First → Last
+      //         const prevIndex = (index - 1 + inputs.length) % inputs.length;
+
+      //         inputs[prevIndex].focus();
+      //       }
+      //     });
+      //   });
+
+      //format amount
+      function formatRupees(amount) {
+        return (
+          "₹" +
+          Number(amount).toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+
+      //download receipt
+
+      document
+        .getElementById("downloadReceipt")
+        .addEventListener("click", async function () {
+          try {
+            // Get values
+            const amountGiven = getNumber("amountGiven");
+            const totalChadarapuAdugulu = getNumber("totalChadarapuAdugulu");
+            const unitCost = getNumber("unitCost");
+            const numberOfLoads = getNumber("numberOfLoads");
+            const wastagePerLoad = getNumber("wastagePerLoad");
+            const royaltyPerLoad = getNumber("royaltyPerLoad");
+
+            // Calculations
+            const totalWastageFeet = numberOfLoads * wastagePerLoad;
+
+            const wastageChadaralu = totalWastageFeet / 100;
+
+            // Your input is square feet, so convert to chadaralu
+            const totalChadaralu = totalChadarapuAdugulu / 100;
+
+            const adjustedChadaralu = totalChadaralu - wastageChadaralu;
+
+            const stoneAmount = adjustedChadaralu * unitCost;
+
+            const totalRoyalty = numberOfLoads * royaltyPerLoad;
+
+            const finalAmount = stoneAmount + totalRoyalty - amountGiven;
+
+            // Receipt data
+            document.getElementById("rFactoryName").innerText =
+              document.getElementById("factoryName").value || "-";
+
+            document.getElementById("rMiningOwner").innerText =
+              document.getElementById("miningOwnerName").value || "-";
+
+            document.getElementById("rLoads").innerText = numberOfLoads;
+
+            document.getElementById("rTotalChadaralu").innerText =
+              totalChadaralu.toFixed(2);
+
+            document.getElementById("rWastageFeet").innerText =
+              totalWastageFeet.toFixed(2);
+
+            document.getElementById("rAdjustedChadaralu").innerText =
+              adjustedChadaralu.toFixed(2);
+
+            document.getElementById("rUnitCost").innerText =
+              formatRupees(unitCost);
+
+            document.getElementById("rStoneAmount").innerText =
+              formatRupees(stoneAmount);
+
+            document.getElementById("rRoyalty").innerText =
+              formatRupees(totalRoyalty);
+
+            document.getElementById("rAmountGiven").innerText =
+              formatRupees(amountGiven);
+
+            document.getElementById("rFinalAmount").innerText = formatRupees(
+              Math.abs(finalAmount),
+            );
+
+            // Balance message
+            const message = document.getElementById("rBalanceMessage");
+
+            if (finalAmount > 0) {
+              message.innerText =
+                "Factory Owner has to pay Mining Owner " +
+                formatRupees(finalAmount);
+            } else if (finalAmount < 0) {
+              message.innerText =
+                "Mining Owner has to pay Factory Owner " +
+                formatRupees(Math.abs(finalAmount));
+            } else {
+              message.innerText = "Account Settled — No Balance";
+            }
+
+            // Show receipt
+            const receipt = document.getElementById("receipt");
+
+            receipt.style.display = "block";
+
+            // Wait for rendering
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            // Check html2canvas
+            if (typeof html2canvas === "undefined") {
+              alert("html2canvas library is not loaded.");
+              return;
+            }
+
+            // Create image
+            const canvas = await html2canvas(receipt, {
+              width: 800,
+              height: 1200,
+              scale: 1,
+              backgroundColor: "#c7e9e6",
+              useCORS: true,
+            });
+
+            // Download
+            const factoryName =
+              document.getElementById("factoryName").value.trim() || "Factory";
+
+            const link = document.createElement("a");
+
+            link.download = factoryName + "_Amount_Receipt.png";
+
+            link.href = canvas.toDataURL("image/png");
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            document.body.removeChild(link);
+
+            // Hide receipt
+            receipt.style.display = "none";
+          } catch (error) {
+            console.error("Receipt download error:", error);
+
+            alert("Unable to download receipt.\n\n" + error.message);
+          }
+        });
+      // --------------------------------
+      // LIVE CALCULATION
+      // --------------------------------
+
+      document.querySelectorAll("input").forEach((input) => {
+        input.addEventListener("input", calculateAmount);
+      });
+    </script>
+  </body>
+</html>
